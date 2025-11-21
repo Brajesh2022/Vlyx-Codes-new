@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-[#050505] scroll-smooth antialiased selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vlyx Codes | Fast, Affordable Web Development</title>
+    <meta name="description" content="We build affordable, high-performance websites for schools, businesses, and startups using Next.js and Cloudflare.">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        display: ['Inter Tight', 'sans-serif'],
+                    },
+                    colors: {
+                        'vlyx-black': '#050505',
+                        'vlyx-card': '#0f0f0f',
+                        'vlyx-border': 'rgba(255, 255, 255, 0.08)',
+                        'accent': '#6366f1',
+                    },
+                    animation: {
+                        'shine': 'shine 3s infinite linear',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'blob': 'blob 10s infinite',
+                        'liquid': 'liquid 8s ease-in-out infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                        'typing': 'typing 1.5s infinite ease-in-out',
+                    },
+                    keyframes: {
+                        shine: {
+                            '0%': { left: '-100%' },
+                            '100%': { left: '100%' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        liquid: {
+                            '0%, 100%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' },
+                            '50%': { borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%' }
+                        },
+                        typing: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-4px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- Core Aesthetics --- */
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+            overscroll-behavior-y: none;
+        }
+        body {
+            color: #e5e5e5;
+        }
+
+        .gpu-accelerated {
+            transform: translateZ(0);
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+
+        /* Noise Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.03;
+        }
+
+        /* Glass Panel Styles */
+        .glass-panel {
+            background: rgba(20, 20, 23, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Modal Styles */
+        #project-modal { 
+            opacity: 0; 
+            pointer-events: none; 
+            transition: opacity 0.3s ease;
+        }
+        #project-modal.active { 
+            opacity: 1; 
+            pointer-events: auto; 
+        }
+
+        /* --- LIQUID GLASS HEADER STYLES --- */
+        .liquid-glass-nav {
+            background: rgba(5, 5, 5, 0.65); 
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 8px 32px 0 rgba(0, 0, 0, 0.5),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            border-radius: 9999px;
+        }
+
+        /* Permanent Glow Animation Logic */
+        @keyframes eternal-glow {
+            0%, 100% { 
+                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.2);
+                border-color: rgba(255, 255, 255, 0.08);
+            }
+            50% { 
+                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 0 0 35px rgba(99, 102, 241, 0.6);
+                border-color: rgba(99, 102, 241, 0.4);
+            }
+        }
+
+        .permanent-glow {
+            animation: eternal-glow 3s ease-in-out infinite;
+        }
+        
+        /* Floating Liquid Blobs */
+        .liquid-blob {
+            position: absolute;
+            filter: blur(60px);
+            opacity: 0.6;
+            z-index: 0;
+            animation: blob 10s infinite alternate;
+        }
+
+        /* --- Improved Hero Styles --- */
+        .hero-bg {
+            background: radial-gradient(circle at 50% 0%, #1a1b26 0%, #050505 70%);
+        }
+
+        .hero-grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px; 
+            transform: perspective(500px) rotateX(60deg);
+            animation: grid-move 20s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+            mask-image: radial-gradient(circle at center, black 0%, transparent 70%);
+            -webkit-mask-image: radial-gradient(circle at center, black 0%, transparent 70%);
+            will-change: transform;
+        }
+
+        @keyframes grid-move {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(40px); }
+        }
+
+        .text-glow {
+            text-shadow: 0 0 30px rgba(99, 102, 241, 0.5), 0 0 60px rgba(99, 102, 241, 0.3);
+        }
+
+        .text-chrome {
+            background: linear-gradient(180deg, #FFFFFF 0%, #B4B4B4 47%, #656565 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.5));
+        }
+
+        .btn-shine {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shine::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        .btn-shine:hover::after {
+            left: 100%;
+        }
+
+        /* --- Vlyx Card Styles --- */
+        .vlyx-card {
+            background: rgba(20, 20, 23, 0.6); 
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+            overflow: hidden;
+            will-change: transform, opacity; 
+        }
+        .vlyx-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 24px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+            pointer-events: none;
+        }
+
+        /* Deep Bento Card */
+        .bento-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform, opacity;
+        }
+        .bento-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Spotlight Effect */
+        .spotlight-wrapper { position: relative; overflow: hidden; }
+        .spotlight-wrapper::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.06), transparent 40%);
+            opacity: 0; transition: opacity 0.5s; pointer-events: none; z-index: 2;
+        }
+        .spotlight-wrapper:hover::before { opacity: 1; }
+
+        /* Animations */
+        @keyframes fade-up {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fade-in {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .animate-fade-up { animation: fade-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
+
+        /* Scroller */
+        .scroller {
+            display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+            gap: 1rem; padding-bottom: 2rem; -ms-overflow-style: none; scrollbar-width: none;
+        }
+        .scroller::-webkit-scrollbar { display: none; }
+        
+        /* Universal Stack Scroller */
+        .stack-scroller {
+            display: flex; 
+            overflow-x: auto; 
+            scroll-snap-type: x mandatory;
+            gap: 1rem; 
+            padding-bottom: 2rem; 
+            -ms-overflow-style: none; 
+            scrollbar-width: none;
+            cursor: grab;
+        }
+        .stack-scroller:active { cursor: grabbing; }
+        .stack-scroller::-webkit-scrollbar { display: none; }
+        
+        .stack-item { 
+            scroll-snap-align: center; 
+            flex: 0 0 280px; 
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        
+        @media (min-width: 768px) {
+            .stack-item { flex: 0 0 340px; scroll-snap-align: start; }
+            .stack-scroller { gap: 1.5rem; }
+            .stack-item:hover { transform: translateY(-5px); }
+        }
+        
+        /* Card Hover Zoom */
+        .project-card:hover .bg-image { transform: scale(1.1); }
+
+        /* --- Chat Styles --- */
+        #luna-chat {
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: bottom right;
+        }
+        
+        /* Fullscreen Modifier */
+        #luna-chat.fullscreen {
+            position: fixed;
+            inset: 0;
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0;
+            border-radius: 0;
+            z-index: 9999;
+            background: rgba(5, 5, 5, 0.95);
+        }
+
+        .chat-msg {
+            animation: fade-in 0.3s ease-out forwards;
+        }
+        
+        /* Markdown Styles within Chat */
+        .chat-msg p { margin-bottom: 0.5em; }
+        .chat-msg p:last-child { margin-bottom: 0; }
+        .chat-msg ul, .chat-msg ol { margin-left: 1.2em; list-style-type: disc; margin-bottom: 0.5em; }
+        .chat-msg strong { font-weight: 700; }
+        .chat-msg code { background: rgba(0,0,0,0.2); padding: 2px 4px; border-radius: 4px; font-family: monospace; }
+        .chat-msg pre { background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; overflow-x: auto; margin-top: 0.5em; }
+        .chat-msg a { text-decoration: underline; }
+
+        .typing-dot {
+            width: 6px; height: 6px; background: #6366f1; border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    </style>
+</head>
+<body class="relative bg-[#050505]">
+
+    <div class="noise-overlay"></div>
+
+    <nav class="fixed top-0 left-0 w-full z-50 px-4 pt-4 flex justify-center transform-gpu" id="navbar">
+        <div class="liquid-glass-nav permanent-glow pl-4 md:pl-6 pr-2 py-2.5 flex items-center gap-4 md:gap-8 max-w-[95vw] md:max-w-none transition-all duration-300">
+            <a href="#" class="font-bold text-lg md:text-xl tracking-tight flex items-center gap-2 text-white">
+                <i class="fa-solid fa-code text-indigo-400 animate-pulse"></i>
+                <span>Vlyx<span class="text-gray-500">Codes</span></span>
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-300/80">
+                <a href="#services" class="hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all">Services</a>
+                <a href="#projects" class="hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all">Projects</a>
+                <a href="#pricing" class="hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] transition-all">Pricing</a>
+            </div>
+            <a href="#contact" class="bg-white/90 hover:bg-white text-black px-5 py-2 rounded-full text-xs md:text-sm font-bold transition-all hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.3)] whitespace-nowrap">
+                Start Project
+            </a>
+        </div>
+    </nav>
+
+    <header class="min-h-[100svh] relative flex flex-col items-center justify-center px-4 md:px-6 text-center overflow-hidden hero-bg pt-20">
+        
+        <div class="hero-grid"></div>
+        
+        <div class="liquid-blob top-[-10%] left-[20%] w-[40vw] h-[40vw] bg-indigo-600 rounded-full mix-blend-screen opacity-30 animate-blob gpu-accelerated"></div>
+        <div class="liquid-blob top-[10%] right-[20%] w-[35vw] h-[35vw] bg-purple-600 rounded-full mix-blend-screen opacity-30 animate-blob gpu-accelerated" style="animation-delay: 2s; animation-duration: 12s;"></div>
+        <div class="liquid-blob bottom-[10%] left-[40%] w-[30vw] h-[30vw] bg-blue-600 rounded-full mix-blend-screen opacity-20 animate-blob gpu-accelerated" style="animation-delay: 4s; animation-duration: 14s;"></div>
+
+        <div class="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 backdrop-blur-md text-indigo-300 text-xs font-mono mb-6 md:mb-8 animate-fade-up opacity-0" style="animation-delay: 0.1s;">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+            </span>
+            Open for Projects
+        </div>
+
+        <div class="relative z-10 max-w-5xl mx-auto mb-6 md:mb-8 animate-fade-up opacity-0 px-2" style="animation-delay: 0.2s;">
+            <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.1]">
+                <span class="text-chrome block">We don't just build.</span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 text-glow block mt-2">
+                    We engineer perfection.
+                </span>
+            </h1>
+        </div>
+
+        <p class="relative z-10 text-base md:text-xl text-gray-400 max-w-2xl mx-auto mb-8 md:mb-10 leading-relaxed font-light animate-fade-up opacity-0 px-4" style="animation-delay: 0.4s;">
+            We build ultra-fast, custom websites for <span class="text-indigo-300 font-medium">Schools, Startups & Businesses</span> using Next.js. 
+            Stop paying expensive hosting fees for slow WordPress sites.
+        </p>
+
+        <div class="relative z-10 flex flex-col sm:flex-row gap-4 md:gap-5 animate-fade-up opacity-0 w-full sm:w-auto px-6 sm:px-0" style="animation-delay: 0.6s;">
+            <button onclick="document.getElementById('projects').scrollIntoView()" class="btn-shine px-6 py-2.5 text-sm md:text-base bg-white text-black rounded-full font-bold hover:scale-105 transition-transform duration-300 shadow-[0_0_40px_rgba(255,255,255,0.3)] flex items-center justify-center gap-2 w-full sm:w-auto">
+                View Projects <i class="fa-solid fa-arrow-right -rotate-45 group-hover:rotate-0 transition-transform"></i>
+            </button>
+            <button onclick="document.getElementById('pricing').scrollIntoView()" class="btn-shine px-6 py-2.5 text-sm md:text-base rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white font-medium hover:bg-white/10 transition-all hover:border-indigo-500/50 w-full sm:w-auto">
+                Get an Estimate
+            </button>
+        </div>
+    </header>
+
+    <!-- NEW: SERVICES SECTION (Direct Clarity) -->
+    <section id="services" class="py-20 px-6 border-t border-white/5 bg-[#060606] relative">
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">What We Build</h2>
+                <p class="text-gray-400 max-w-xl mx-auto">We don't just write code. We provide complete digital solutions for your specific industry.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Service 1: Education -->
+                <div class="bento-card p-8 rounded-3xl border border-white/5 bg-white/[0.02] group hover:border-indigo-500/30 transition-all">
+                    <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">School & Institute Sites</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Complete websites with admission forms, exam result publishing, and dynamic photo galleries. We automate the boring stuff so you can focus on education.</p>
+                </div>
+
+                <!-- Service 2: Business -->
+                <div class="bento-card p-8 rounded-3xl border border-white/5 bg-white/[0.02] group hover:border-green-500/30 transition-all">
+                    <div class="w-14 h-14 rounded-2xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-briefcase text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Business Portfolios</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Fast, professional sites for local businesses, shops, and agencies. SEO-optimized to help you rank on Google Maps and search results.</p>
+                </div>
+
+                <!-- Service 3: Custom Apps -->
+                <div class="bento-card p-8 rounded-3xl border border-white/5 bg-white/[0.02] group hover:border-purple-500/30 transition-all">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-layer-group text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Custom Web Apps</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Need a dashboard? A student management system? Or a custom tool? We build secure, scalable web applications tailored to your workflow.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- REPLACED PHILOSOPHY SECTION (Per User Request) -->
+    <section id="philosophy" class="relative py-16 md:py-32 px-4 md:px-6">
+        
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-full z-0 pointer-events-none">
+            <div class="absolute top-20 left-0 w-64 h-64 bg-indigo-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-40 animate-blob gpu-accelerated"></div>
+            <div class="absolute top-20 right-0 w-64 h-64 bg-purple-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-40 animate-blob gpu-accelerated" style="animation-delay: 2s"></div>
+        </div>
+
+        <div class="max-w-6xl mx-auto relative z-10">
+            
+            <div class="flex flex-col items-end md:flex-row md:items-end md:justify-between mb-10 md:mb-16 gap-6 text-right md:text-left">
+                <div class="max-w-2xl w-full">
+                    <h2 class="text-3xl md:text-6xl font-display font-bold leading-tight tracking-tight text-white mb-4">
+                        Stop paying for <br>
+                        <span class="text-gray-500 line-through decoration-indigo-500 decoration-4 md:decoration-[6px]">
+                            slow websites.
+                        </span>
+                    </h2>
+                    <p class="text-gray-400 text-sm md:text-lg leading-relaxed max-w-lg ml-auto md:ml-0">
+                        WordPress is heavy. We build <span class="text-gray-200 font-medium">Edge-Rendered</span> sites that load instantly and cost $0 to host.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6 text-left">
+                
+                <div class="bento-card rounded-2xl md:rounded-3xl p-5 md:p-8 col-span-2 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-indigo-500/10 blur-[60px] rounded-full group-hover:bg-indigo-500/20 transition-colors duration-500 gpu-accelerated"></div>
+                    
+                    <div class="relative z-10 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+                        <div class="w-10 h-10 md:w-14 md:h-14 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
+                            <i class="fa-solid fa-bolt text-lg md:text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg md:text-2xl font-bold text-white mb-1 md:mb-2">Instant Loading</h3>
+                            <p class="text-gray-400 text-xs md:text-base leading-relaxed">
+                                Uses Cloudflare's Edge Network. Content is pre-cached globally, delivering sub-100ms load times anywhere.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bento-card rounded-2xl md:rounded-3xl p-4 md:p-8 col-span-1 relative overflow-hidden group flex flex-col justify-between h-36 md:h-auto">
+                    <div class="relative z-10">
+                        <div class="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 mb-3 md:mb-6">
+                            <i class="fa-solid fa-piggy-bank text-sm md:text-xl"></i>
+                        </div>
+                        <h3 class="text-sm md:text-2xl font-bold text-white mb-1">Zero Fees</h3>
+                        <p class="text-gray-500 text-[10px] md:text-sm leading-tight">Pay $0/mo hosting forever.</p>
+                    </div>
+                </div>
+
+                <div class="bento-card rounded-2xl md:rounded-3xl p-4 md:p-8 col-span-1 relative overflow-hidden group flex flex-col justify-between h-36 md:h-auto">
+                    <div class="relative z-10">
+                        <div class="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-3 md:mb-6">
+                            <i class="fa-solid fa-shield-halved text-sm md:text-xl"></i>
+                        </div>
+                        <h3 class="text-sm md:text-2xl font-bold text-white mb-1">Secure</h3>
+                        <p class="text-gray-500 text-[10px] md:text-sm leading-tight">No plugins. No database hacks.</p>
+                    </div>
+                </div>
+
+                <div class="bento-card rounded-2xl md:rounded-3xl p-5 md:p-8 col-span-2 relative overflow-hidden group">
+                    <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-purple-500/10 blur-[80px] rounded-full group-hover:bg-purple-500/20 transition-colors duration-500 gpu-accelerated"></div>
+                    
+                    <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-6 justify-between">
+                        <div class="max-w-md">
+                            <div class="flex items-center gap-3 mb-2 md:mb-4">
+                                <div class="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+                                    <i class="fa-solid fa-chart-line text-sm md:text-xl"></i>
+                                </div>
+                                <h3 class="text-lg md:text-2xl font-bold text-white">Infinite Scale</h3>
+                            </div>
+                            <p class="text-gray-400 text-xs md:text-base leading-relaxed">
+                                Start small, grow to millions. Our serverless architecture scales automatically without crashing or slowing down.
+                            </p>
+                        </div>
+                        
+                        <div class="w-full md:w-auto bg-black/20 border border-white/5 rounded-lg p-3 md:p-4 flex flex-col gap-2 md:min-w-[200px]">
+                            <div class="flex justify-between text-[10px] text-gray-500 uppercase tracking-wider">
+                                <span>Requests</span>
+                                <span class="text-green-400">Live</span>
+                            </div>
+                            <div class="flex items-end gap-1 h-10 md:h-16">
+                                <div class="w-1/5 bg-indigo-500/30 h-[40%] rounded-sm"></div>
+                                <div class="w-1/5 bg-indigo-500/40 h-[60%] rounded-sm"></div>
+                                <div class="w-1/5 bg-indigo-500/50 h-[30%] rounded-sm"></div>
+                                <div class="w-1/5 bg-indigo-500/60 h-[80%] rounded-sm"></div>
+                                <div class="w-1/5 bg-indigo-500 h-[100%] rounded-sm shadow-[0_0_10px_rgba(99,102,241,0.5)] animate-pulse"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- UNIFIED TECH STACK SECTION (Carousel) -->
+    <section id="stack" class="py-16 md:py-24 px-0 md:px-0 border-t border-white/5 bg-[#060606] relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-indigo-500/5 to-transparent pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="mb-8 md:mb-12 flex items-end justify-between px-6 md:px-8">
+                <div>
+                    <span class="text-indigo-400 font-mono text-xs md:text-sm uppercase tracking-widest">The Power Under the Hood</span>
+                    <h2 class="text-2xl md:text-4xl font-bold mt-2 text-white">Development Stack.</h2>
+                </div>
+                <!-- Swipe Hint -->
+                <div class="text-gray-500 text-xs font-mono animate-pulse flex items-center gap-2">
+                    <span class="hidden md:inline">DRAG OR SCROLL</span>
+                    <span class="md:hidden">SWIPE</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+
+            <!-- Carousel -->
+            <div class="stack-scroller px-6 md:px-8">
+                 <!-- 1. Next.js -->
+                 <div class="stack-item bento-card p-6 md:p-8 rounded-2xl flex flex-col justify-between border border-white/5 bg-white/[0.02] group hover:border-white/20 hover:bg-white/[0.04]">
+                    <div class="flex items-start justify-between mb-6 md:mb-10">
+                        <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-black border border-white/20 flex items-center justify-center shadow-lg">
+                            <svg class="w-7 h-7 md:w-9 md:h-9 text-white" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask0m" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="180" height="180"><circle cx="90" cy="90" r="90" fill="black"/></mask>
+                                <g mask="url(#mask0m)"><circle cx="90" cy="90" r="90" fill="black"/><path d="M149.508 157.52L69.142 54H54V125.97H66.1136V69.3836L139.999 164.845C143.333 162.614 146.509 160.165 149.508 157.52Z" fill="white"/><rect x="115" y="54" width="12" height="72" fill="white"/></g>
+                            </svg>
+                        </div>
+                        <div class="flex gap-1">
+                            <span class="px-2 py-1 bg-white/10 border border-white/10 rounded text-[10px] md:text-xs text-gray-300 font-mono">SSR</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-2xl font-bold text-white mb-2">Next.js 16</h3>
+                        <p class="text-gray-400 text-xs md:text-sm leading-relaxed">The core engine. Leveraging Server Actions and App Router for zero-latency transitions.</p>
+                    </div>
+                </div>
+
+                <!-- 2. Cloudflare -->
+                <div class="stack-item bento-card p-6 md:p-8 rounded-2xl flex flex-col justify-between border border-[#F38020]/20 bg-[#F38020]/[0.02] group hover:border-[#F38020]/40 hover:bg-[#F38020]/[0.04]">
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-[#F38020]/10 border border-[#F38020]/20 flex items-center justify-center mb-6 md:mb-10">
+                        <i class="fa-brands fa-cloudflare text-2xl md:text-3xl text-[#F38020]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-2xl font-bold text-white group-hover:text-[#F38020] transition-colors">Cloudflare</h3>
+                        <p class="text-gray-400 text-xs md:text-sm mt-2 leading-relaxed">Edge Workers & Global CDN. Pre-caching content in 200+ cities.</p>
+                    </div>
+                </div>
+
+                <!-- 3. Firebase -->
+                <div class="stack-item bento-card p-6 md:p-8 rounded-2xl flex flex-col justify-between border border-[#FFCA28]/20 bg-[#FFCA28]/[0.02] group hover:border-[#FFCA28]/40 hover:bg-[#FFCA28]/[0.04]">
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-[#FFCA28]/10 border border-[#FFCA28]/20 flex items-center justify-center mb-6 md:mb-10">
+                        <i class="fa-solid fa-fire text-2xl md:text-3xl text-[#FFCA28]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-2xl font-bold text-white group-hover:text-[#FFCA28] transition-colors">Firebase</h3>
+                        <p class="text-gray-400 text-xs md:text-sm mt-2 leading-relaxed">Realtime NoSQL Database, Authentication, and secure backend logic.</p>
+                    </div>
+                </div>
+
+                <!-- 4. React -->
+                <div class="stack-item bento-card p-6 md:p-8 rounded-2xl flex flex-col justify-between border border-[#61DAFB]/20 bg-[#61DAFB]/[0.02] group hover:border-[#61DAFB]/40 hover:bg-[#61DAFB]/[0.04]">
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-[#61DAFB]/10 border border-[#61DAFB]/20 flex items-center justify-center mb-6 md:mb-10">
+                        <i class="fa-brands fa-react text-2xl md:text-3xl text-[#61DAFB] group-hover:animate-spin-slow"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-2xl font-bold text-white group-hover:text-[#61DAFB] transition-colors">React</h3>
+                        <p class="text-gray-400 text-xs md:text-sm mt-2 leading-relaxed">Interactive UI Logic. Component-based architecture for reusable design.</p>
+                    </div>
+                </div>
+
+                <!-- 5. Tailwind -->
+                 <div class="stack-item bento-card p-6 md:p-8 rounded-2xl flex flex-col justify-between border border-[#38BDF8]/20 bg-[#38BDF8]/[0.02] group hover:border-[#38BDF8]/40 hover:bg-[#38BDF8]/[0.04]">
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-[#38BDF8]/10 border border-[#38BDF8]/20 flex items-center justify-center mb-6 md:mb-10">
+                        <i class="fa-solid fa-wind text-2xl md:text-3xl text-[#38BDF8]"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-2xl font-bold text-white group-hover:text-[#38BDF8] transition-colors">Tailwind</h3>
+                        <p class="text-gray-400 text-xs md:text-sm mt-2 leading-relaxed">Rapid Styling. Utility-first CSS for clean, responsive designs.</p>
+                    </div>
+                </div>
+                 
+                 <!-- 6. AI Integrations -->
+                 <div class="stack-item bento-card p-6 md:p-8 rounded-2xl flex flex-col justify-between border border-indigo-500/20 bg-indigo-500/[0.05] group hover:border-indigo-500/40 hover:bg-indigo-500/[0.08]">
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6 md:mb-10">
+                        <i class="fa-solid fa-brain text-2xl md:text-3xl text-indigo-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg md:text-2xl font-bold text-white">AI Integrations</h3>
+                        <p class="text-gray-400 text-xs md:text-sm mt-2 leading-relaxed">Generative Intelligence. Smart agents and dynamic content generation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW PROJECT SECTION: DYNAMIC RENDERED -->
+    <section id="projects" class="min-h-[100svh] flex flex-col justify-center py-20 border-y border-white/5 bg-[#040404] relative overflow-hidden">
+        
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px]"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto w-full px-6 mb-10 flex justify-between items-end relative z-10">
+            <div>
+                <span class="text-indigo-400 font-mono text-xs md:text-sm uppercase tracking-widest">Portfolio</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2 mb-2 text-white">Our Projects.</h2>
+                <p class="text-gray-400 text-sm md:text-base">Real applications serving real users.</p>
+            </div>
+            
+            <div class="hidden md:flex gap-3">
+                <button id="scrollLeft" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 group glass-panel">
+                    <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+                </button>
+                <button id="scrollRight" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 group glass-panel">
+                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="card-container" class="scroller px-6 md:px-[calc((100vw-80rem)/2)] relative z-10 pb-8 cursor-grab active:cursor-grabbing">
+        </div>
+
+        <div class="md:hidden text-center text-gray-500 text-xs font-mono animate-pulse mt-2">
+            <i class="fa-solid fa-arrow-right"></i> SWIPE TO EXPLORE
+        </div>
+    </section>
+
+    <section id="pricing" class="py-24 px-6 bg-[#080808]">
+        <div class="max-w-3xl mx-auto text-center mb-12">
+            <span class="text-indigo-400 font-mono text-sm uppercase tracking-wider">Transparent Costing</span>
+            <h2 class="text-3xl md:text-4xl font-bold mt-2">Get an Instant Estimate</h2>
+            <p class="text-gray-400 mt-4">Our AI analyzes your requirements to give you a fair price based on our affordable vision.</p>
+        </div>
+
+        <div class="max-w-2xl mx-auto glass-card rounded-2xl p-1 md:p-8 shadow-2xl border-t border-indigo-500/20">
+            <div id="ai-container" class="min-h-[300px] flex flex-col">
+                <div class="flex items-center justify-between mb-6 border-b border-white/5 pb-4 px-4 pt-4 md:px-0 md:pt-0">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="font-mono text-sm text-gray-300">Vlyx Cost Engine</span>
+                    </div>
+                    <span id="step-indicator" class="text-xs text-gray-500 font-mono">INITIALIZING...</span>
+                </div>
+
+                <div id="ai-content" class="flex-1 flex flex-col justify-center px-4 md:px-0">
+                    </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold">Trust the code.</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Testimonial 1 -->
+            <div class="vlyx-card p-8 flex flex-col gap-4 spotlight-wrapper">
+                <div class="text-yellow-500 text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 text-sm leading-relaxed">"Working with Vlyx Codes on our school website was a great experience. They built us a modern, user-friendly site with a complete student dashboard."</p>
+                <div class="mt-auto flex items-center gap-3">
+                    <!-- Real Image with crop -->
+                    <img src="https://i.postimg.cc/G2Fpmw3y/Firefly-20250127001509-2.jpg" alt="Bipin K. Y." class="w-12 h-12 rounded-full object-cover border border-white/10">
+                    <div>
+                        <div class="text-white font-bold text-sm">Bipin K. Y.</div>
+                        <div class="text-gray-500 text-xs">Director, D.P.S Keoti</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial 2 -->
+            <div class="vlyx-card p-8 flex flex-col gap-4 spotlight-wrapper">
+                <div class="text-yellow-500 text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 text-sm leading-relaxed">"They gave us an amazing website that does everything we need - and the price was totally reasonable. We can easily update course info ourselves now."</p>
+                <div class="mt-auto flex items-center gap-3">
+                    <!-- Real Image with crop -->
+                    <img src="https://i.postimg.cc/d1qx4MZ2/Whats-App-Image-2024-03-29-at-10-25-11-PM.jpg" alt="Sanjay" class="w-12 h-12 rounded-full object-cover border border-white/10">
+                    <div>
+                        <div class="text-white font-bold text-sm">Sanjay</div>
+                        <div class="text-gray-500 text-xs">Director, Ekagra Academy</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial 3 -->
+            <div class="vlyx-card p-8 flex flex-col gap-4 spotlight-wrapper">
+                <div class="text-yellow-500 text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 text-sm leading-relaxed">"Built an AI chess game using Gemini engine. Humans can play against the AI, and it works smoothly. Really happy with how it turned out."</p>
+                <div class="mt-auto flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center font-bold text-white">R</div>
+                    <div>
+                        <div class="text-white font-bold text-sm">Raghavendra</div>
+                        <div class="text-gray-500 text-xs">AI Project Lead</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 max-w-4xl mx-auto border-t border-white/5">
+        <h2 class="text-3xl font-bold mb-12 text-center">Frequently Asked Questions</h2>
+        <div class="space-y-4">
+            
+            <!-- Cost -->
+            <details class="group glass-card rounded-xl p-1">
+                <summary class="flex cursor-pointer items-center justify-between p-4 font-medium text-white">
+                    <span>How much does a website cost?</span>
+                    <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down"></i></span>
+                </summary>
+                <div class="px-4 pb-4 text-gray-400 text-sm leading-relaxed">
+                    Typically, our projects range from <strong>₹4,000 to ₹7,000</strong> depending on the complexity (e.g., simple informational site vs. complex dashboard). You can use our <a href="#pricing" class="text-indigo-400 underline">AI Estimation Tool</a> above to get a clearer idea based on your specific needs.
+                </div>
+            </details>
+
+            <!-- Time -->
+            <details class="group glass-card rounded-xl p-1">
+                <summary class="flex cursor-pointer items-center justify-between p-4 font-medium text-white">
+                    <span>How long will it take to build?</span>
+                    <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down"></i></span>
+                </summary>
+                <div class="px-4 pb-4 text-gray-400 text-sm leading-relaxed">
+                    We usually complete standard websites within <strong>one week</strong>. Simpler projects can be done much faster—for example, we built our anime site <em>AniVlyx</em> in just a single day. If you need custom features or complex debugging, it might take a bit longer, but we'll keep you updated daily.
+                </div>
+            </details>
+
+            <!-- Team Size -->
+            <details class="group glass-card rounded-xl p-1">
+                <summary class="flex cursor-pointer items-center justify-between p-4 font-medium text-white">
+                    <span>How big is your team?</span>
+                    <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down"></i></span>
+                </summary>
+                <div class="px-4 pb-4 text-gray-400 text-sm leading-relaxed">
+                    We are a lean, highly experienced team of <strong>3 skilled developers</strong>. We've built numerous complex projects (streaming platforms, school management systems, AI tools), so while we are small, we deliver quality that rivals larger agencies.
+                </div>
+            </details>
+
+            <!-- Recurring Costs -->
+            <details class="group glass-card rounded-xl p-1">
+                <summary class="flex cursor-pointer items-center justify-between p-4 font-medium text-white">
+                    <span>Is this a one-time cost?</span>
+                    <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down"></i></span>
+                </summary>
+                <div class="px-4 pb-4 text-gray-400 text-sm leading-relaxed">
+                    <strong>Yes.</strong> Our development fee is a one-time payment. You will only face recurring costs if you choose to buy a custom domain (like .com) or paid hosting from third parties. If you stick to our recommended stack (Cloudflare/Firebase free tiers), you pay <strong>₹0 monthly</strong> after we hand over the project.
+                </div>
+            </details>
+
+            <!-- Domains -->
+            <details class="group glass-card rounded-xl p-1">
+                <summary class="flex cursor-pointer items-center justify-between p-4 font-medium text-white">
+                    <span>How much does a domain cost?</span>
+                    <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down"></i></span>
+                </summary>
+                <div class="px-4 pb-4 text-gray-400 text-sm leading-relaxed">
+                    If you want a custom domain (e.g., <code>yourbusiness.com</code>), it usually costs between <strong>₹1,000 - ₹3,000 per year</strong>, payable to registrars like GoDaddy or Hostinger. However, we also offer <strong>free subdomains</strong> (like <code>.web.app</code> or <code>.pages.dev</code>) that are free forever with no limits—a great option if you are just starting out.
+                </div>
+            </details>
+
+            <!-- Static vs Dynamic -->
+            <details class="group glass-card rounded-xl p-1">
+                <summary class="flex cursor-pointer items-center justify-between p-4 font-medium text-white">
+                    <span>What is the difference between Static and Dynamic websites?</span>
+                    <span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down"></i></span>
+                </summary>
+                <div class="px-4 pb-4 text-gray-400 text-sm leading-relaxed space-y-2">
+                    <p>Think of a <strong>Static Website</strong> like a <em>digital brochure</em>. It shows the same information to everyone who visits (images, text, contact info). It is incredibly fast, secure, and usually free to host. Perfect for portfolios and landing pages.</p>
+                    <p>Think of a <strong>Dynamic Website</strong> like a <em>smart app</em> (e.g., Facebook or a Dashboard). It changes based on who is looking at it, saves user data, allows logins, and handles complex tasks. We build both types depending on what you need.</p>
+                </div>
+            </details>
+
+        </div>
+    </section>
+
+    <section id="contact" class="relative py-24 px-6 overflow-hidden text-center">
+        <!-- Background elements -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-600/20 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-5xl mx-auto">
+            <i class="fa-regular fa-paper-plane text-4xl mb-6 text-indigo-400"></i>
+            <h2 class="text-3xl md:text-5xl font-bold mb-6">Ready to upgrade?</h2>
+            <p class="text-gray-400 mb-8 max-w-xl mx-auto">Join the ecosystem. Get a fast, modern, and affordable website built by skilled developers who care.</p>
+            
+            <!-- 
+                INTERACTIVE CONTACT ACTION
+                1. Default: Shows the bulky "Contact Us" button
+                2. Click: Hides button, Reveals Glass Grid with specific contacts
+            -->
+            <div id="contact-action-container" class="min-h-[100px] flex justify-center items-center">
+                
+                <!-- Initial Button -->
+                <button id="contact-btn" onclick="revealContact()" class="inline-block px-12 py-5 bg-white text-black rounded-full font-bold text-lg hover:bg-indigo-50 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                    Contact Us
+                </button>
+
+                <!-- Hidden Contact Grid (Revealed on Click) -->
+                <div id="contact-panel" class="hidden opacity-0 transform translate-y-4 transition-all duration-500">
+                    <div class="glass-card p-8 rounded-3xl max-w-3xl mx-auto border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 text-left">
+                            
+                            <!-- Email -->
+                            <a href="mailto:contact@vlyx.site" class="group flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-indigo-500/30">
+                                <div class="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
+                                    <i class="fa-regular fa-envelope text-lg"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500 uppercase tracking-wider font-mono">Email</div>
+                                    <div class="text-white font-bold">contact@vlyx.site</div>
+                                </div>
+                            </a>
+
+                            <!-- WhatsApp -->
+                            <a href="https://wa.me/918271081338" target="_blank" class="group flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-green-500/30">
+                                <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 group-hover:scale-110 transition-transform">
+                                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500 uppercase tracking-wider font-mono">WhatsApp</div>
+                                    <div class="text-white font-bold">+91 82710 81338</div>
+                                </div>
+                            </a>
+
+                            <!-- Instagram -->
+                            <a href="https://instagram.com/vlyxcodes" target="_blank" class="group flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-pink-500/30">
+                                <div class="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 group-hover:scale-110 transition-transform">
+                                    <i class="fa-brands fa-instagram text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500 uppercase tracking-wider font-mono">Instagram</div>
+                                    <div class="text-white font-bold">@vlyxcodes</div>
+                                </div>
+                            </a>
+
+                            <!-- YouTube -->
+                            <a href="https://youtube.com/@vlyxcodes" target="_blank" class="group flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 transition-all border border-transparent hover:border-red-500/30">
+                                <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 group-hover:scale-110 transition-transform">
+                                    <i class="fa-brands fa-youtube text-xl"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-500 uppercase tracking-wider font-mono">YouTube</div>
+                                    <div class="text-white font-bold">@vlyxcodes</div>
+                                </div>
+                            </a>
+
+                        </div>
+                        
+                        <div class="mt-6 text-center border-t border-white/5 pt-4">
+                            <button onclick="closeContact()" class="text-xs text-gray-500 hover:text-white flex items-center justify-center gap-2 mx-auto transition-colors">
+                                <i class="fa-solid fa-xmark"></i> Close Panel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <div class="mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 max-w-7xl mx-auto px-6">
+            <div class="flex flex-col items-center md:items-start gap-2 mb-4 md:mb-0">
+                <span class="text-white font-bold">Vlyx Codes</span>
+                <span>Built with ❤️ by Brajesh & Aadish</span>
+            </div>
+            <div class="flex gap-6">
+                <span>Hosted on Cloudflare</span>
+                <a href="#" class="hover:text-white">Privacy</a>
+                <a href="#" class="hover:text-white">Terms</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FLOATING AI BUTTON -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
+        <!-- Chat Window -->
+        <div id="luna-chat" class="mb-4 w-80 bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl origin-bottom-right scale-0 opacity-0 pointer-events-auto flex flex-col h-[400px]">
+            <!-- Header -->
+            <div class="bg-indigo-600/20 p-4 border-b border-white/5 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-sm">Luna AI</h4>
+                    <span class="text-green-400 text-xs flex items-center gap-1"><span class="w-1.5 h-1.5 bg-green-400 rounded-full"></span> Online</span>
+                </div>
+                
+                <!-- Minimize Button (Only visible in fullscreen) -->
+                <button id="luna-minimize" onclick="toggleLuna()" class="ml-auto text-gray-400 hover:text-white hidden">
+                    <i class="fa-solid fa-compress"></i>
+                </button>
+                
+                <!-- Close Button (Only visible in normal mode) -->
+                <button id="luna-close" onclick="toggleLuna()" class="ml-auto text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <!-- Messages Area -->
+            <div id="luna-messages" class="flex-1 p-4 overflow-y-auto space-y-3 text-sm flex flex-col">
+                <div class="chat-msg bg-white/10 p-3 rounded-2xl rounded-tl-none text-gray-200 self-start max-w-[85%]">
+                    Hi! I'm Luna. I know everything about Vlyx Codes. Ask me about our projects, pricing, or tech stack!
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-3 border-t border-white/10 bg-black/40">
+                <form onsubmit="sendLunaMessage(event)" class="flex gap-2">
+                    <input type="text" id="luna-input" placeholder="Ask a question..." class="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 focus:bg-white/10 transition-colors">
+                    <button type="submit" class="w-9 h-9 rounded-full bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-500 transition-colors">
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Trigger Button -->
+        <button id="luna-trigger" onclick="toggleLuna()" class="w-14 h-14 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:scale-110 transition-transform pointer-events-auto group relative">
+            <i class="fa-solid fa-robot text-xl"></i>
+            <span class="absolute top-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-black"></span>
+        </button>
+    </div>
+
+    <!-- PROJECT MODAL (Hidden by default) -->
+    <div id="project-modal" class="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        
+        <!-- Modal Content -->
+        <div id="modal-content" class="relative w-full max-w-4xl bg-[#0F0F11] border border-white/10 rounded-3xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
+            
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors border border-white/10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex flex-col md:flex-row h-[85vh] md:h-auto overflow-y-auto md:overflow-hidden">
+                
+                <!-- Image Side -->
+                <div class="w-full md:w-1/2 h-64 md:h-auto relative shrink-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0F0F11] via-transparent to-transparent z-10 md:hidden"></div>
+                    <img id="modal-img" src="" alt="Project" class="w-full h-full object-cover object-top">
+                </div>
+
+                <!-- Details Side -->
+                <div class="w-full md:w-1/2 p-6 md:p-10 flex flex-col bg-[#0F0F11]">
+                    
+                    <div class="mb-6">
+                        <span id="modal-cat" class="text-indigo-400 font-mono text-xs uppercase tracking-wider border border-indigo-500/30 px-2 py-1 rounded bg-indigo-500/10">Category</span>
+                    </div>
+                    
+                    <h3 id="modal-title" class="text-3xl md:text-4xl font-bold text-white mb-4">Title</h3>
+                    
+                    <div class="prose prose-invert text-gray-400 text-sm leading-relaxed mb-8 flex-grow">
+                        <p id="modal-desc">Description goes here...</p>
+                    </div>
+
+                    <!-- Tech Stack -->
+                    <div class="mb-8">
+                        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Technology Stack</h4>
+                        <div id="modal-tech" class="flex flex-wrap gap-2">
+                            <!-- Tags injected via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-auto pt-6 border-t border-white/10 flex gap-4">
+                        <a id="modal-link" href="#" target="_blank" class="flex-1 bg-white text-black font-bold py-3 px-6 rounded-xl text-center hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                            Visit Website <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                        <button onclick="closeModal()" class="px-6 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition-colors text-sm font-medium">
+                            Close
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = "";
+
+        // --- GSAP Setup ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. Animate Elements on Scroll
+        gsap.utils.toArray('.glass-card, .vlyx-card, .bento-card').forEach(card => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                ease: "power2.out"
+            });
+        });
+
+        // --- Spotlight Effect ---
+        document.querySelectorAll('.spotlight, .spotlight-wrapper').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // --- Contact Toggle Logic ---
+        function revealContact() {
+            const btn = document.getElementById('contact-btn');
+            const panel = document.getElementById('contact-panel');
+            btn.classList.add('hidden');
+            panel.classList.remove('hidden');
+            setTimeout(() => {
+                panel.classList.remove('opacity-0', 'translate-y-4');
+            }, 10);
+        }
+
+        function closeContact() {
+            const btn = document.getElementById('contact-btn');
+            const panel = document.getElementById('contact-panel');
+            panel.classList.add('opacity-0', 'translate-y-4');
+            setTimeout(() => {
+                panel.classList.add('hidden');
+                btn.classList.remove('hidden');
+            }, 500);
+        }
+
+        // ==========================================================================
+        // --- GEMINI API INTEGRATION ---
+        // ==========================================================================
+
+        // 1. Smart Project Estimator
+        async function fetchGeminiEstimate(selections) {
+            const prompt = `
+                You are the estimation engine for Vlyx Codes, a web agency in India.
+                Client Requirements:
+                - Business Type: ${selections[0]}
+                - Functionality: ${selections[1]}
+                - Domain Plan: ${selections[2]}
+
+                Generate a JSON object with the following structure (no markdown, just raw JSON):
+                {
+                    "min_price": number (in INR, roughly 4000-25000 based on complexity),
+                    "max_price": number (in INR),
+                    "timeline": string (e.g. "1 week"),
+                    "explanation": string (max 20 words),
+                    "recommended_stack": string (e.g. "Next.js + Cloudflare")
+                }
+            `;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+
+                if (!response.ok) throw new Error('API Failed');
+                
+                const data = await response.json();
+                const result = JSON.parse(data.candidates[0].content.parts[0].text);
+                renderResult(result);
+
+            } catch (error) {
+                // Fallback static estimate if API fails
+                let base = 4000;
+                if(selections[1].includes("Complex")) base = 15000;
+                renderResult({
+                    min_price: base,
+                    max_price: base + 5000,
+                    timeline: "1-2 Weeks",
+                    explanation: "AI unavailable, showing standard rates.",
+                    recommended_stack: "Next.js Standard"
+                });
+            }
+        }
+
+        // 2. Luna AI Chat with Context Memory
+        let isChatOpen = false;
+        let isFullscreen = false;
+        let chatHistory = [
+            {
+                role: "model",
+                parts: [{ text: "Hi! I'm Luna. I know everything about Vlyx Codes. Ask me about our projects, pricing, or tech stack!" }]
+            }
+        ];
+        
+        function toggleLuna() {
+            const chat = document.getElementById('luna-chat');
+            
+            if (isChatOpen) {
+                // Close chat
+                chat.classList.remove('scale-100', 'opacity-100');
+                chat.classList.add('scale-0', 'opacity-0');
+                
+                // Reset fullscreen if active
+                if(isFullscreen) {
+                    chat.classList.remove('fullscreen');
+                    document.getElementById('luna-trigger').style.display = 'flex';
+                    document.getElementById('luna-minimize').classList.add('hidden');
+                    document.getElementById('luna-close').classList.remove('hidden');
+                    isFullscreen = false;
+                }
+            } else {
+                // Open chat (default mode)
+                chat.classList.remove('scale-0', 'opacity-0');
+                chat.classList.add('scale-100', 'opacity-100');
+            }
+            isChatOpen = !isChatOpen;
+        }
+
+        function expandLuna() {
+            if (isFullscreen) return; // Already full
+            
+            const chat = document.getElementById('luna-chat');
+            const triggerBtn = document.getElementById('luna-trigger');
+            
+            chat.classList.add('fullscreen');
+            triggerBtn.style.display = 'none'; // Hide trigger button in fullscreen
+            
+            // Swap close button for minimize
+            document.getElementById('luna-close').classList.add('hidden');
+            document.getElementById('luna-minimize').classList.remove('hidden');
+            
+            isFullscreen = true;
+        }
+
+        async function sendLunaMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('luna-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            // 1. Expand to Fullscreen immediately on first message
+            expandLuna();
+
+            // 2. Add User Message
+            addChatMessage(msg, 'user');
+            input.value = '';
+            
+            // Update history
+            chatHistory.push({ role: "user", parts: [{ text: msg }] });
+
+            // 3. Add Typing Indicator
+            const typingId = addTypingIndicator();
+
+            // 4. Construct System Prompt (Context Injection)
+            const vlyxContext = `
+                SYSTEM: You are Luna, the AI assistant for Vlyx Codes. 
+                IDENTITY: Vlyx Codes is a web development agency run by a team of 3 skilled developers (Brajesh, Aadish, etc). We engineer high-performance sites. We are NOT generic Wordpress devs.
+                CORE PHILOSOPHY: "Stop paying for slow websites." We use Next.js + Cloudflare/Firebase. Zero monthly hosting fees. Static/Edge rendering.
+                SERVICES: 
+                1. School Sites (Admissions, Results, Gallery).
+                2. Business Portfolios (SEO optimized).
+                3. Custom Web Apps (Dashboards, Tools).
+                PRICING: Typically ₹4000 - ₹7000. One-time fee. Free subdomains available.
+                PROJECTS: 
+                - NetVlyx (Movie streaming, No ads).
+                - Book.vlyx (Free ebooks library).
+                - FireVlyx (Firebase deployment tool).
+                - Vlyx.mod (Mod APK store).
+                - Vlyx.ide (AI code generator).
+                - AniVlyx (Anime streaming).
+                - DPS Keoti (School site + Dashboard).
+                - Ekagra Academy (Coaching site).
+                FAQ ANSWERS:
+                - Hosting is free via Cloudflare Pages/Firebase tier.
+                - Static sites are like brochures (fast, safe). Dynamic sites are like apps (login, data).
+                - Domains cost ₹1000-3000/yr custom, or free subdomains forever.
+                CONTACT: contact@vlyx.site, +91 82710 81338.
+                
+                INSTRUCTION: Be friendly, casual, and helpful. You are a skilled developer friend, not a corporate bot. Keep answers concise.
+            `;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        systemInstruction: { parts: [{ text: vlyxContext }] },
+                        contents: chatHistory 
+                    })
+                });
+                
+                const data = await response.json();
+                const reply = data.candidates[0].content.parts[0].text;
+                
+                removeChatMessage(typingId);
+                addChatMessage(reply, 'ai');
+                
+                // Update history with AI response
+                chatHistory.push({ role: "model", parts: [{ text: reply }] });
+
+            } catch (error) {
+                removeChatMessage(typingId);
+                addChatMessage("I'm having trouble connecting to my brain right now. Try again later!", 'ai');
+            }
+        }
+
+        function addChatMessage(text, sender) {
+            const container = document.getElementById('luna-messages');
+            const div = document.createElement('div');
+            div.className = `chat-msg p-3 rounded-2xl text-sm max-w-[85%] ${sender === 'user' ? 'bg-indigo-600 text-white self-end rounded-tr-none' : 'bg-white/10 text-gray-200 self-start rounded-tl-none'}`;
+            
+            // Parse markdown using marked
+            div.innerHTML = marked.parse(text);
+            
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return div.id = 'msg-' + Date.now();
+        }
+
+        function addTypingIndicator() {
+            const container = document.getElementById('luna-messages');
+            const div = document.createElement('div');
+            div.className = `chat-msg bg-white/10 p-3 rounded-2xl rounded-tl-none self-start flex gap-1 items-center h-[44px]`;
+            div.innerHTML = `<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return div.id = 'typing-' + Date.now();
+        }
+
+        function removeChatMessage(id) {
+            const el = document.getElementById(id);
+            if(el) el.remove();
+        }
+
+
+        // ==========================================================================
+        // --- PROJECT RENDERING LOGIC ---
+        // ==========================================================================
+        
+        const projects = [
+            {
+                title: "NetVlyx",
+                category: "Streaming",
+                desc: "A fast, ad-free movie streaming web app. Browse and download publicly available content with zero interruptions. Built using advanced scraping techniques to ensure content availability without hosting files directly.",
+                tech: ["Next.js", "Cloudflare Workers", "Firebase", "Web Scraping"],
+                image: "https://i.ibb.co/Qv9Yz6Yg/Netvlyx.jpg",
+                link: "netvlyx.html",
+                color: "text-red-500",
+                hoverBorder: "hover:border-red-500/40"
+            },
+            {
+                title: "Book.vlyx",
+                category: "Education",
+                desc: "The internet's largest free library. We believe education should be accessible to everyone. This platform aggregates millions of free ebooks from various sources into a clean, ad-free interface for students.",
+                tech: ["Next.js", "Cloudflare Workers", "GitHub CMS", "Scraping"],
+                image: "https://i.ibb.co/3DSW6Vy/Book-vlyx.png",
+                link: "book-vlyx.html",
+                color: "text-blue-500",
+                hoverBorder: "hover:border-blue-500/40"
+            },
+            {
+                title: "FireVlyx",
+                category: "Dev Tools",
+                desc: "A browser-based deployment tool that eliminates command-line setups. Deploy your websites directly to Firebase Hosting or Vercel using a drag-and-drop interface or by connecting your GitHub repo.",
+                tech: ["Next.js", "Firebase API", "GitHub API", "Vercel"],
+                image: "https://i.ibb.co/jvd1jWNd/FireVlyx.png",
+                link: "firevlyx.html",
+                color: "text-yellow-500",
+                hoverBorder: "hover:border-yellow-500/40"
+            },
+            {
+                title: "Vlyx.mod",
+                category: "Storefront",
+                desc: "A specialized digital storefront for organizing and displaying Mod APKs. Features a clean UI and automated data gathering to keep app versions up to date.",
+                tech: ["Next.js", "Cloudflare Workers", "Web Scraping", "Vercel"],
+                image: "https://i.ibb.co/R4z8V2zz/vlyx-mod.png",
+                link: "vlyx-mod.html",
+                color: "text-green-400",
+                hoverBorder: "hover:border-green-500/40"
+            },
+            {
+                title: "Vlyx.ide",
+                category: "AI Tools",
+                desc: "A prompt-based code generation tool. Simply describe what you want in natural language, and Vlyx.ide generates downloadable, ready-to-run code packages. No setup required.",
+                tech: ["Remix", "Bolt.new Open Source", "Cloudflare", "AI API"],
+                image: "https://i.ibb.co/ks38pYb5/Vlyx-ide.png",
+                link: "vlyx-ide.html",
+                color: "text-purple-400",
+                hoverBorder: "hover:border-purple-500/40"
+            },
+            {
+                title: "AniVlyx",
+                category: "Entertainment",
+                desc: "An anime streaming platform built under the Vlyx ecosystem. Our mission: No ads on the internet. It scrapes anime content to serve users a premium, interruption-free viewing experience.",
+                tech: ["React (Vite)", "Cloudflare Workers", "Cloudflare Pages"],
+                image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=800&auto=format&fit=crop", 
+                link: "anivlyx.html",
+                color: "text-pink-500",
+                hoverBorder: "hover:border-pink-500/40"
+            },
+            {
+                title: "DPS Keoti",
+                category: "Institutional",
+                desc: "A comprehensive school website with a custom-built admission system. Features an auto-updating video gallery (via YouTube RSS) and generates professional, printable admission receipts for parents.",
+                tech: ["Next.js Static", "YouTube RSS", "Google Forms", "Firebase"],
+                image: "https://i.ibb.co/NdvrPdMF/dps-keoti-new.jpg",
+                link: "dps.html",
+                color: "text-green-500",
+                hoverBorder: "hover:border-green-500/40"
+            },
+            {
+                title: "DPS Dashboard",
+                category: "Management",
+                desc: "A secure internal dashboard for DPS Keoti staff and administration. Handles student data management, fee tracking, and operational logistics securely using Firestore.",
+                tech: ["Next.js", "Firestore", "Auth"],
+                image: "https://i.ibb.co/NdvrPdMF/dps-keoti-new.jpg",
+                link: "dps.html",
+                color: "text-emerald-400",
+                hoverBorder: "hover:border-emerald-500/40"
+            },
+            {
+                title: "Luna AI",
+                category: "Assistant",
+                desc: "The intelligent brain behind Vlyx Codes. Luna is an integrated AI assistant accessible via the floating button on our homepage, ready to guide users through our ecosystem.",
+                tech: ["Next.js", "LLM Integration", "Vercel AI SDK"],
+                image: "https://i.ibb.co/8DdDrpK9/luna-ai.jpg",
+                link: "luna.html",
+                color: "text-indigo-400",
+                hoverBorder: "hover:border-indigo-500/40"
+            },
+            {
+                title: "Ekagra Academy",
+                category: "Client Work",
+                desc: "A highly optimized WordPress website for a coaching institute in Darbhanga. Focused on local SEO ranking and providing a smooth information flow for prospective students.",
+                tech: ["WordPress", "PHP", "SEO"],
+                image: "https://i.postimg.cc/cHwXy6Bw/Ekagra.jpg",
+                link: "ekagra.html",
+                color: "text-orange-400",
+                hoverBorder: "hover:border-orange-500/40"
+            }
+        ];
+
+        // Render Projects
+        const container = document.getElementById('card-container');
+        
+        if (container) {
+            projects.forEach((p, index) => {
+                const card = document.createElement('div');
+                card.className = `project-card snap-center shrink-0 w-[85vw] md:w-[400px] h-[480px] glass-panel rounded-3xl overflow-hidden relative group cursor-pointer spotlight-wrapper border border-white/5 ${p.hoverBorder} transition-colors duration-300`;
+                
+                // Initial state for animation
+                card.style.opacity = '0'; 
+                card.style.transform = 'translateY(30px)';
+
+                card.innerHTML = `
+                    <div class="h-[55%] w-full overflow-hidden relative">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+                        <img src="${p.image}" alt="${p.title}" class="bg-image w-full h-full object-cover transition-transform duration-700 ease-out">
+                        <div class="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-mono uppercase tracking-wider text-white">
+                            ${p.category}
+                        </div>
+                    </div>
+                    <div class="h-[45%] p-6 flex flex-col justify-between relative z-20 bg-gradient-to-b from-[#0f0f0f] to-black">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white mb-2 group-hover:${p.color} transition-colors">${p.title}</h3>
+                            <p class="text-gray-400 text-sm line-clamp-3 leading-relaxed">${p.desc}</p>
+                        </div>
+                        <div class="flex items-center justify-between mt-4">
+                            <div class="flex gap-2 overflow-hidden">
+                                ${p.tech.slice(0, 2).map(t => `<span class="text-[10px] px-2 py-1 rounded border border-white/10 bg-white/5 text-gray-300">${t}</span>`).join('')}
+                                ${p.tech.length > 2 ? `<span class="text-[10px] px-2 py-1 text-gray-500">+${p.tech.length - 2}</span>` : ''}
+                            </div>
+                            <button class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                                <i class="fa-solid fa-arrow-up-right-from-square transform group-hover:rotate-45 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                card.onclick = () => openModal(index);
+                container.appendChild(card);
+            });
+
+            // Animate Cards Entrance
+            gsap.to('.project-card', {
+                scrollTrigger: {
+                    trigger: '#projects',
+                    start: 'top 70%'
+                },
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "power3.out"
+            });
+            
+            // Scroll Logic
+            document.getElementById('scrollLeft').onclick = () => container.scrollBy({ left: -450, behavior: 'smooth' });
+            document.getElementById('scrollRight').onclick = () => container.scrollBy({ left: 450, behavior: 'smooth' });
+
+            // Drag to Scroll
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            container.addEventListener('mousedown', (e) => {
+                isDown = true;
+                container.classList.add('active:cursor-grabbing');
+                startX = e.pageX - container.offsetLeft;
+                scrollLeft = container.scrollLeft;
+            });
+            container.addEventListener('mouseleave', () => { isDown = false; });
+            container.addEventListener('mouseup', () => { isDown = false; });
+            container.addEventListener('mousemove', (e) => {
+                if(!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - container.offsetLeft;
+                const walk = (x - startX) * 2;
+                container.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        // --- Modal Logic ---
+        const modal = document.getElementById('project-modal');
+        const modalContent = document.getElementById('modal-content');
+
+        function openModal(index) {
+            const p = projects[index];
+            document.getElementById('modal-img').src = p.image;
+            document.getElementById('modal-title').innerText = p.title;
+            document.getElementById('modal-cat').innerText = p.category;
+            document.getElementById('modal-desc').innerText = p.desc;
+            document.getElementById('modal-link').href = p.link;
+            
+            document.getElementById('modal-tech').innerHTML = p.tech.map(t => 
+                `<span class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-gray-300 font-mono">${t}</span>`
+            ).join('');
+
+            modal.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                modal.classList.add('active');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            });
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        // --- AI Pricing Engine Logic ---
+        const aiContainer = document.getElementById('ai-content');
+        const stepIndicator = document.getElementById('step-indicator');
+        
+        const questions = [
+            {
+                q: "What describes your business?",
+                options: ["Educational Institute", "Small Business / Shop", "Personal Portfolio", "Tech Startup / Tool"]
+            },
+            {
+                q: "Do you need custom functionality?",
+                options: ["No, just information", "Yes, Student/User Logins", "Yes, E-commerce/Payment", "Yes, Complex Data Tools"]
+            },
+            {
+                q: "Do you have a domain name?",
+                options: ["Yes, I have one", "No, I need a .com", "No, I want a free .web.app"]
+            }
+        ];
+
+        let currentStep = 0;
+        let userSelections = [];
+
+        function renderStart() {
+            aiContainer.innerHTML = `
+                <div class="text-center animate-fade-in">
+                    <i class="ph ph-robot text-6xl text-indigo-500 mb-4 inline-block"></i>
+                    <h3 class="text-xl font-bold mb-2">Let's estimate your project</h3>
+                    <p class="text-gray-400 mb-6 text-sm">Answer 3 simple questions to get a price range.</p>
+                    <button onclick="nextQuestion()" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-gray-200 transition">Start Analysis</button>
+                </div>
+            `;
+        }
+
+        function nextQuestion() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = questions[currentStep];
+            stepIndicator.innerText = `QUERY ${currentStep + 1}/${questions.length}`;
+            
+            let buttonsHtml = q.options.map((opt, idx) => `
+                <button onclick="handleAnswer('${opt}')" class="w-full text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-indigo-500/20 hover:border-indigo-500/50 transition-all flex items-center justify-between group">
+                    <span class="text-gray-300 group-hover:text-white">${opt}</span>
+                    <i class="fa-solid fa-chevron-right opacity-0 group-hover:opacity-100 text-indigo-400"></i>
+                </button>
+            `).join('');
+
+            aiContainer.innerHTML = `
+                <div class="animate-fade-in w-full">
+                    <h3 class="text-xl font-bold mb-6">${q.q}</h3>
+                    <div class="space-y-3">
+                        ${buttonsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleAnswer(answer) {
+            userSelections.push(answer);
+            currentStep++;
+            if (currentStep < questions.length) {
+                renderQuestion();
+            } else {
+                renderCalculating();
+            }
+        }
+
+        function renderCalculating() {
+            stepIndicator.innerText = "PROCESSING DATA...";
+            aiContainer.innerHTML = `
+                <div class="text-center py-12">
+                    <div class="inline-block w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                    <div class="font-mono text-indigo-400 text-sm" id="loading-text">Consulting Vision...</div>
+                </div>
+            `;
+
+            fetchGeminiEstimate(userSelections);
+        }
+
+        function renderResult(result) {
+            stepIndicator.innerText = "ESTIMATE COMPLETE";
+            
+            aiContainer.innerHTML = `
+                <div class="text-center animate-fade-in">
+                    <div class="text-sm text-gray-400 mb-1">Estimated Vlyx Cost</div>
+                    <div class="text-4xl md:text-5xl font-bold text-white mb-2">₹${result.min_price.toLocaleString()} - ₹${result.max_price.toLocaleString()}</div>
+                    
+                    <div class="flex justify-center gap-2 mb-4">
+                        <span class="px-2 py-1 bg-green-500/10 border border-green-500/20 rounded text-[10px] text-green-400 uppercase tracking-wider">
+                            <i class="fa-solid fa-clock"></i> ${result.timeline}
+                        </span>
+                        <span class="px-2 py-1 bg-indigo-500/10 border border-indigo-500/20 rounded text-[10px] text-indigo-400 uppercase tracking-wider">
+                            <i class="fa-solid fa-layer-group"></i> ${result.recommended_stack}
+                        </span>
+                    </div>
+
+                    <p class="text-gray-400 text-sm mb-6 px-4 italic">"${result.explanation}"</p>
+                    
+                    <a href="mailto:hello@vlyx.site?subject=Quote for ₹${result.min_price}" class="bg-indigo-600 text-white px-8 py-3 rounded-full font-bold hover:bg-indigo-500 transition shadow-lg shadow-indigo-500/20">
+                        Lock this Price
+                    </a>
+                    <button onclick="resetAI()" class="block w-full mt-4 text-xs text-gray-500 hover:text-white">Start Over</button>
+                </div>
+            `;
+        }
+
+        function resetAI() {
+            currentStep = 0;
+            userSelections = [];
+            renderStart();
+        }
+
+        // Init
+        renderStart();
+
+    </script>
+</body>
+</html>
