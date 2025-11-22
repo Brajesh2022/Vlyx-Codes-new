@@ -1,17 +1,33 @@
+import { checkOrigin, isRateLimited } from '../utils.js';
+
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
 
-    // Strict Same-Origin Policy:
-    // We rely on the browser's default Same-Origin Policy by NOT setting CORS headers.
-    // This ensures only the website hosting this function can call it.
+    // 1. Security: Origin Check
+    if (!checkOrigin(request)) {
+      return new Response(JSON.stringify({ error: "Unauthorized Origin" }), { status: 403, headers: { "Content-Type": "application/json" } });
+    }
+
+    // 2. Security: Rate Limiting
+    const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+    if (isRateLimited(clientIp)) {
+      return new Response(JSON.stringify({ error: "you exceeded your limits..., try after a minute...." }), { status: 429, headers: { "Content-Type": "application/json" } });
+    }
 
     const body = await request.json();
     const contents = body.contents;
 
+    // 3. Security: Input Validation
     if (!contents || !Array.isArray(contents)) {
        return new Response(JSON.stringify({ error: "Invalid input" }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
+
+    // Sanitize input: ensure only text parts are sent
+    const sanitizedContents = contents.map(msg => ({
+        role: msg.role === 'user' || msg.role === 'model' ? msg.role : 'user',
+        parts: Array.isArray(msg.parts) ? msg.parts.map(p => ({ text: String(p.text || "").slice(0, 1000) })) : []
+    }));
 
     const vlyxContext = `
         SYSTEM: You are Luna, the AI assistant for Vlyx Codes.
@@ -50,7 +66,7 @@ export async function onRequestPost(context) {
         },
         body: JSON.stringify({
             systemInstruction: { parts: [{ text: vlyxContext }] },
-            contents: contents
+            contents: sanitizedContents
         })
     });
 

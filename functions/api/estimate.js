@@ -1,14 +1,19 @@
+import { checkOrigin, isRateLimited } from '../utils.js';
+
 export async function onRequestPost(context) {
   try {
     const { request, env } = context;
 
-    // Strict Same-Origin Policy:
-    // Cloudflare Pages Functions are served from the same domain as the static assets.
-    // By default, browsers enforce Same-Origin Policy.
-    // We DO NOT add Access-Control-Allow-Origin: * headers here, preventing other sites from calling this API.
+    // 1. Security: Origin Check
+    if (!checkOrigin(request)) {
+      return new Response(JSON.stringify({ error: "Unauthorized Origin" }), { status: 403, headers: { "Content-Type": "application/json" } });
+    }
 
-    // If you need to allow specific external domains (e.g. for mobile apps), you can check request.headers.get("Origin")
-    // and set the header conditionally. For now, we strictly allow only same-origin.
+    // 2. Security: Rate Limiting
+    const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+    if (isRateLimited(clientIp)) {
+      return new Response(JSON.stringify({ error: "you exceeded your limits..., try after a minute...." }), { status: 429, headers: { "Content-Type": "application/json" } });
+    }
 
     const body = await request.json();
     const selections = body.selections;
@@ -17,12 +22,17 @@ export async function onRequestPost(context) {
        return new Response(JSON.stringify({ error: "Invalid input" }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
 
+    // Sanitize inputs (ensure they are strings and limited in length to prevent huge prompt injection)
+    const s0 = String(selections[0] || "").slice(0, 100);
+    const s1 = String(selections[1] || "").slice(0, 100);
+    const s2 = String(selections[2] || "").slice(0, 100);
+
     const prompt = `
         You are the estimation engine for Vlyx Codes, a web agency in India.
         Client Requirements:
-        - Business Type: ${selections[0]}
-        - Functionality: ${selections[1]}
-        - Domain Plan: ${selections[2]}
+        - Business Type: ${s0}
+        - Functionality: ${s1}
+        - Domain Plan: ${s2}
 
         Generate a JSON object with the following structure (no markdown, just raw JSON):
         {
