@@ -1,51 +1,50 @@
 
-from playwright.sync_api import sync_playwright, expect
+from playwright.sync_api import sync_playwright
 import time
+import os
 
-def run(playwright):
-    browser = playwright.chromium.launch(headless=True)
-    page = browser.new_page()
+def verify_interactions():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
 
-    # Mock the API endpoints
-    def handle_chat(route):
-        route.fulfill(
-            status=200,
-            content_type="application/json",
-            body='{"candidates": [{"content": {"parts": [{"text": "Hello! <script>alert(1)</script> **Bold**"}]}}]}'
-        )
+        # Load the page
+        page.goto("http://localhost:8080/index.html")
 
-    page.route("**/api/chat", handle_chat)
+        # Wait for page to load
+        page.wait_for_timeout(1000)
 
-    # 1. Load the page
-    page.goto("http://localhost:8080/index.html")
-    time.sleep(2) # Wait for initial animations
+        # 1. Test Project Modal
+        print("Testing Project Modal...")
+        # Click the first project card
+        page.click('.project-card')
 
-    # 2. Test Chat with XSS Injection in response
-    # Click the Luna Chat trigger
-    page.click("#luna-trigger")
-    time.sleep(1)
+        # Wait for animation
+        page.wait_for_timeout(1000)
 
-    # Type a message
-    page.fill("#luna-input", "Hello")
-    page.click("button[type='submit']")
+        # Take screenshot of open modal
+        page.screenshot(path="verification_modal_open.png")
+        print("Modal Open screenshot taken.")
 
-    # Wait for response to appear
-    page.wait_for_selector("#luna-messages .chat-msg:nth-child(3)") # 1=Initial, 2=User, 3=AI
+        # Close modal
+        page.click('#project-modal .fa-xmark')
 
-    # Check HTML content
-    chat_msgs = page.locator("#luna-messages")
-    content = chat_msgs.inner_html()
-    print("Chat HTML content:", content)
+        # Wait for close animation
+        page.wait_for_timeout(1000)
 
-    if "<script>" in content:
-        print("FAIL: Script tag found!")
-    else:
-        print("PASS: Script tag sanitized.")
+        # 2. Test AI Chat
+        print("Testing AI Chat...")
+        # Click chat trigger
+        page.click('#luna-trigger')
 
-    # Take screenshot of Chat
-    page.screenshot(path="verification.png")
+        # Wait for animation
+        page.wait_for_timeout(1000)
 
-    browser.close()
+        # Take screenshot of open chat
+        page.screenshot(path="verification_chat_open.png")
+        print("Chat Open screenshot taken.")
 
-with sync_playwright() as playwright:
-    run(playwright)
+        browser.close()
+
+if __name__ == "__main__":
+    verify_interactions()
