@@ -1029,8 +1029,6 @@
     </div>
 
     <script>
-        const apiKey = "";
-
         // --- GSAP Setup ---
         gsap.registerPlugin(ScrollTrigger);
 
@@ -1087,31 +1085,11 @@
 
         // 1. Smart Project Estimator
         async function fetchGeminiEstimate(selections) {
-            const prompt = `
-                You are the estimation engine for Vlyx Codes, a web agency in India.
-                Client Requirements:
-                - Business Type: ${selections[0]}
-                - Functionality: ${selections[1]}
-                - Domain Plan: ${selections[2]}
-
-                Generate a JSON object with the following structure (no markdown, just raw JSON):
-                {
-                    "min_price": number (in INR, roughly 4000-25000 based on complexity),
-                    "max_price": number (in INR),
-                    "timeline": string (e.g. "1 week"),
-                    "explanation": string (max 20 words),
-                    "recommended_stack": string (e.g. "Next.js + Cloudflare")
-                }
-            `;
-
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                const response = await fetch('/api/estimate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }],
-                        generationConfig: { responseMimeType: "application/json" }
-                    })
+                    body: JSON.stringify({ selections })
                 });
 
                 if (!response.ok) throw new Error('API Failed');
@@ -1121,6 +1099,7 @@
                 renderResult(result);
 
             } catch (error) {
+                console.error(error);
                 // Fallback static estimate if API fails
                 let base = 4000;
                 if(selections[1].includes("Complex")) base = 15000;
@@ -1203,40 +1182,11 @@
             // 3. Add Typing Indicator
             const typingId = addTypingIndicator();
 
-            // 4. Construct System Prompt (Context Injection)
-            const vlyxContext = `
-                SYSTEM: You are Luna, the AI assistant for Vlyx Codes. 
-                IDENTITY: Vlyx Codes is a web development agency run by a team of 3 skilled developers (Brajesh, Aadish, etc). We engineer high-performance sites. We are NOT generic Wordpress devs.
-                CORE PHILOSOPHY: "Stop paying for slow websites." We use Next.js + Cloudflare/Firebase. Zero monthly hosting fees. Static/Edge rendering.
-                SERVICES: 
-                1. School Sites (Admissions, Results, Gallery).
-                2. Business Portfolios (SEO optimized).
-                3. Custom Web Apps (Dashboards, Tools).
-                PRICING: Typically ₹4000 - ₹7000. One-time fee. Free subdomains available.
-                PROJECTS: 
-                - NetVlyx (Movie streaming, No ads).
-                - Book.vlyx (Free ebooks library).
-                - FireVlyx (Firebase deployment tool).
-                - Vlyx.mod (Mod APK store).
-                - Vlyx.ide (AI code generator).
-                - AniVlyx (Anime streaming).
-                - DPS Keoti (School site + Dashboard).
-                - Ekagra Academy (Coaching site).
-                FAQ ANSWERS:
-                - Hosting is free via Cloudflare Pages/Firebase tier.
-                - Static sites are like brochures (fast, safe). Dynamic sites are like apps (login, data).
-                - Domains cost ₹1000-3000/yr custom, or free subdomains forever.
-                CONTACT: contact@vlyx.site, +91 82710 81338.
-                
-                INSTRUCTION: Be friendly, casual, and helpful. You are a skilled developer friend, not a corporate bot. Keep answers concise.
-            `;
-
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        systemInstruction: { parts: [{ text: vlyxContext }] },
                         contents: chatHistory 
                     })
                 });
