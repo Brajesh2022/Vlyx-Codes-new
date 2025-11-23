@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://vlyx-codes.pages.dev/sitemap.xml
