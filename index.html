@@ -42,19 +42,13 @@
 
     <script src="tailwindcss.js"></script>
     
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    
-    <!-- Markdown Parser -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- DOMPurify Sanitizer -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
 
@@ -753,7 +747,7 @@
                 <p class="text-gray-300 text-sm leading-relaxed">"Working with Vlyx Codes on our school website was a great experience. They built us a modern, user-friendly site with a complete student dashboard."</p>
                 <div class="mt-auto flex items-center gap-3">
                     <!-- Real Image with crop -->
-                    <img src="https://i.postimg.cc/G2Fpmw3y/Firefly-20250127001509-2.jpg" alt="Bipin K. Y." class="w-12 h-12 rounded-full object-cover border border-white/10">
+                    <img src="https://i.postimg.cc/G2Fpmw3y/Firefly-20250127001509-2.jpg" loading="lazy" alt="Bipin K. Y." class="w-12 h-12 rounded-full object-cover border border-white/10">
                     <div>
                         <div class="text-white font-bold text-sm">Bipin K. Y.</div>
                         <div class="text-gray-500 text-xs">Director, D.P.S Keoti</div>
@@ -767,7 +761,7 @@
                 <p class="text-gray-300 text-sm leading-relaxed">"They gave us an amazing website that does everything we need - and the price was totally reasonable. We can easily update course info ourselves now."</p>
                 <div class="mt-auto flex items-center gap-3">
                     <!-- Real Image with crop -->
-                    <img src="https://i.postimg.cc/d1qx4MZ2/Whats-App-Image-2024-03-29-at-10-25-11-PM.jpg" alt="Sanjay" class="w-12 h-12 rounded-full object-cover border border-white/10">
+                    <img src="https://i.postimg.cc/d1qx4MZ2/Whats-App-Image-2024-03-29-at-10-25-11-PM.jpg" loading="lazy" alt="Sanjay" class="w-12 h-12 rounded-full object-cover border border-white/10">
                     <div>
                         <div class="text-white font-bold text-sm">Sanjay</div>
                         <div class="text-gray-500 text-xs">Director, Ekagra Academy</div>
@@ -1028,7 +1022,7 @@
                 <!-- Image Side -->
                 <div class="w-full h-64 md:h-96 relative shrink-0">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#0F0F11] via-transparent to-transparent z-10 md:hidden"></div>
-                    <img id="modal-img" src="" alt="Project" class="w-full h-full object-cover object-top">
+                    <img id="modal-img" src="" alt="Project" class="w-full h-full object-cover object-top" loading="lazy">
                 </div>
 
                 <!-- Details Side -->
@@ -1070,23 +1064,75 @@
     <script src="projects.js"></script>
 
     <script>
-        // --- GSAP Setup ---
-        gsap.registerPlugin(ScrollTrigger);
-
-        // 1. Animate Elements on Scroll
-        gsap.utils.toArray('.glass-card, .vlyx-card, .bento-card').forEach(card => {
-            gsap.from(card, {
-                scrollTrigger: {
-                    trigger: card,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse"
-                },
-                y: 50,
-                opacity: 0,
-                duration: 0.8,
-                ease: "power2.out"
+        // Load scripts deferred
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.body.appendChild(script);
             });
+        }
+
+        async function loadDependencies() {
+            try {
+                // Load critical scripts first or in parallel if order doesn't matter much
+                await Promise.all([
+                    loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js'),
+                    loadScript('https://cdn.jsdelivr.net/npm/marked/marked.min.js'),
+                    loadScript('https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js'),
+                    loadScript('https://unpkg.com/@phosphor-icons/web')
+                ]);
+
+                // Load dependent scripts
+                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js');
+
+                initGSAP();
+            } catch (err) {
+                console.error("Failed to load scripts", err);
+            }
+        }
+
+        // Delay heavy stuff
+        window.addEventListener('load', () => {
+             setTimeout(loadDependencies, 100);
         });
+
+        // --- GSAP Setup ---
+        function initGSAP() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // 1. Animate Elements on Scroll
+            gsap.utils.toArray('.glass-card, .vlyx-card, .bento-card').forEach(card => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    },
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power2.out"
+                });
+            });
+
+            // Animate Cards Entrance (originally in projects rendering, but we can re-trigger or check if present)
+            if (document.querySelector('.project-card')) {
+                gsap.to('.project-card', {
+                    scrollTrigger: {
+                        trigger: '#projects',
+                        start: 'top 70%'
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    stagger: 0.1,
+                    ease: "power3.out"
+                });
+            }
+        }
 
         // --- Spotlight Effect ---
         document.querySelectorAll('.spotlight, .spotlight-wrapper').forEach(card => {
@@ -1297,7 +1343,7 @@
                 card.innerHTML = `
                     <div class="h-[55%] w-full overflow-hidden relative">
                         <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                        <img src="${p.image}" alt="${p.title}" class="bg-image w-full h-full object-cover transition-transform duration-700 ease-out">
+                        <img src="${p.image}" alt="${p.title}" loading="lazy" class="bg-image w-full h-full object-cover transition-transform duration-700 ease-out">
                         <div class="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-mono uppercase tracking-wider text-white">
                             ${p.category}
                         </div>
@@ -1323,18 +1369,7 @@
                 container.appendChild(card);
             });
 
-            // Animate Cards Entrance
-            gsap.to('.project-card', {
-                scrollTrigger: {
-                    trigger: '#projects',
-                    start: 'top 70%'
-                },
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                stagger: 0.1,
-                ease: "power3.out"
-            });
+            // Animate Cards Entrance - Moved to initGSAP to wait for GSAP load
             
             // Scroll Logic
             document.getElementById('scrollLeft').onclick = () => container.scrollBy({ left: -450, behavior: 'smooth' });
