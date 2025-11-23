@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-[#050505] scroll-smooth antialiased selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vlyx Codes | Our Portfolio</title>
+    <meta name="description" content="Explore our portfolio of high-performance websites and applications.">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- DOMPurify Sanitizer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        display: ['Inter Tight', 'sans-serif'],
+                    },
+                    colors: {
+                        'vlyx-black': '#050505',
+                        'vlyx-card': '#0f0f0f',
+                        'vlyx-border': 'rgba(255, 255, 255, 0.08)',
+                        'accent': '#6366f1',
+                    },
+                    animation: {
+                        'shine': 'shine 3s infinite linear',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'blob': 'blob 10s infinite',
+                    },
+                    keyframes: {
+                        shine: {
+                            '0%': { left: '-100%' },
+                            '100%': { left: '100%' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Reuse existing styles */
+        html, body { max-width: 100vw; overflow-x: hidden; overscroll-behavior-y: none; }
+        body { color: #e5e5e5; }
+
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9999; opacity: 0.03;
+        }
+
+        .glass-panel {
+            background: rgba(20, 20, 23, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        #project-modal { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        #project-modal.active { opacity: 1; pointer-events: auto; }
+
+        .liquid-glass-nav {
+            background: rgba(5, 5, 5, 0.65);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            border-radius: 9999px;
+        }
+
+        .hero-bg { background: radial-gradient(circle at 50% 0%, #1a1b26 0%, #050505 70%); }
+
+        .project-card:hover .bg-image { transform: scale(1.1); }
+
+        .spotlight-wrapper { position: relative; overflow: hidden; }
+        .spotlight-wrapper::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.06), transparent 40%);
+            opacity: 0; transition: opacity 0.5s; pointer-events: none; z-index: 2;
+        }
+        .spotlight-wrapper:hover::before { opacity: 1; }
+    </style>
+</head>
+<body class="relative bg-[#050505]">
+
+    <div class="noise-overlay"></div>
+
+    <nav class="fixed top-0 left-0 w-full z-50 px-4 pt-4 flex justify-center transform-gpu" id="navbar">
+        <div class="liquid-glass-nav pl-4 md:pl-6 pr-2 py-2.5 flex items-center gap-4 md:gap-8 max-w-[95vw] md:max-w-none transition-all duration-300">
+            <a href="index.html" class="font-bold text-lg md:text-xl tracking-tight flex items-center gap-2 text-white">
+                <i class="fa-solid fa-code text-indigo-400"></i>
+                <span>Vlyx<span class="text-gray-500">Codes</span></span>
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-300/80">
+                <a href="index.html#services" class="hover:text-white transition-all">Services</a>
+                <a href="index.html#projects" class="text-white transition-all">Projects</a>
+                <a href="index.html#pricing" class="hover:text-white transition-all">Pricing</a>
+            </div>
+            <a href="index.html#contact" class="bg-white/90 hover:bg-white text-black px-5 py-2 rounded-full text-xs md:text-sm font-bold transition-all hover:scale-105">
+                Start Project
+            </a>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-16 px-6 text-center hero-bg border-b border-white/5">
+        <div class="max-w-4xl mx-auto">
+            <span class="text-indigo-400 font-mono text-xs md:text-sm uppercase tracking-widest">Complete Portfolio</span>
+            <h1 class="text-4xl md:text-6xl font-bold text-white mt-4 mb-6">Our Work</h1>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">A collection of applications, websites, and tools we've built for our clients and the community.</p>
+        </div>
+    </header>
+
+    <section class="py-20 px-4 md:px-6 max-w-7xl mx-auto">
+        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Projects injected here -->
+        </div>
+    </section>
+
+    <footer class="py-12 border-t border-white/5 text-center text-gray-600 text-sm">
+        <p>&copy; 2025 Vlyx Codes. All rights reserved.</p>
+    </footer>
+
+    <!-- PROJECT MODAL (Same as index.html) -->
+    <div id="project-modal" class="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div id="modal-content" class="relative w-full max-w-4xl bg-[#0F0F11] border border-white/10 rounded-3xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors border border-white/10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex flex-col max-h-[90vh] overflow-y-auto">
+                <div class="w-full h-64 md:h-96 relative shrink-0">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0F0F11] via-transparent to-transparent z-10 md:hidden"></div>
+                    <img id="modal-img" src="" alt="Project" class="w-full h-full object-cover object-top">
+                </div>
+                <div class="w-full p-6 md:p-10 flex flex-col bg-[#0F0F11]">
+                    <div class="mb-6">
+                        <span id="modal-cat" class="text-indigo-400 font-mono text-xs uppercase tracking-wider border border-indigo-500/30 px-2 py-1 rounded bg-indigo-500/10">Category</span>
+                    </div>
+                    <h3 id="modal-title" class="text-3xl md:text-4xl font-bold text-white mb-4">Title</h3>
+                    <div class="prose prose-invert text-gray-400 text-sm leading-relaxed mb-8 flex-grow">
+                        <p id="modal-desc">Description goes here...</p>
+                    </div>
+                    <div class="mb-8">
+                        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Technology Stack</h4>
+                        <div id="modal-tech" class="flex flex-wrap gap-2"></div>
+                    </div>
+                    <div class="mt-auto pt-6 border-t border-white/10 flex gap-4">
+                        <a id="modal-link" href="#" target="_blank" class="flex-1 bg-white text-black font-bold py-3 px-6 rounded-xl text-center hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                            Visit Website <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                        <button onclick="closeModal()" class="px-6 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition-colors text-sm font-medium">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Data -->
+    <script src="projects.js"></script>
+
+    <script>
+        // --- Spotlight Effect ---
+        function initSpotlight() {
+            document.querySelectorAll('.spotlight-wrapper').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+            });
+        }
+
+        // Render Projects
+        const container = document.getElementById('projects-grid');
+
+        if (container && typeof projects !== 'undefined') {
+            projects.forEach((p, index) => {
+                const card = document.createElement('div');
+                // Use similar card styling but adapted for grid (w-full instead of fixed width)
+                card.className = `project-card w-full h-[480px] glass-panel rounded-3xl overflow-hidden relative group cursor-pointer spotlight-wrapper border border-white/5 ${p.hoverBorder} transition-colors duration-300 opacity-0 translate-y-8`;
+
+                card.innerHTML = `
+                    <div class="h-[55%] w-full overflow-hidden relative">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+                        <img src="${p.image}" alt="${p.title}" class="bg-image w-full h-full object-cover transition-transform duration-700 ease-out">
+                        <div class="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-mono uppercase tracking-wider text-white">
+                            ${p.category}
+                        </div>
+                    </div>
+                    <div class="h-[45%] p-6 flex flex-col justify-between relative z-20 bg-gradient-to-b from-[#0f0f0f] to-black">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white mb-2 group-hover:${p.color} transition-colors">${p.title}</h3>
+                            <p class="text-gray-400 text-sm line-clamp-3 leading-relaxed">${p.desc}</p>
+                        </div>
+                        <div class="flex items-center justify-between mt-4">
+                            <div class="flex gap-2 overflow-hidden">
+                                ${p.tech.slice(0, 2).map(t => `<span class="text-[10px] px-2 py-1 rounded border border-white/10 bg-white/5 text-gray-300">${t}</span>`).join('')}
+                                ${p.tech.length > 2 ? `<span class="text-[10px] px-2 py-1 text-gray-500">+${p.tech.length - 2}</span>` : ''}
+                            </div>
+                            <button class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                                <i class="fa-solid fa-arrow-up-right-from-square transform group-hover:rotate-45 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                card.onclick = () => openModal(index);
+                container.appendChild(card);
+            });
+
+            initSpotlight();
+
+            // Animate Entrance
+            gsap.to('.project-card', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "power3.out"
+            });
+        }
+
+        // --- Modal Logic ---
+        const modal = document.getElementById('project-modal');
+        const modalContent = document.getElementById('modal-content');
+
+        function openModal(index) {
+            const p = projects[index];
+            document.getElementById('modal-img').src = p.image;
+            document.getElementById('modal-title').innerText = p.title;
+            document.getElementById('modal-cat').innerText = p.category;
+            document.getElementById('modal-desc').innerText = p.desc;
+            document.getElementById('modal-link').href = p.link;
+
+            document.getElementById('modal-tech').innerHTML = p.tech.map(t =>
+                `<span class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-gray-300 font-mono">${t}</span>`
+            ).join('');
+
+            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.paddingRight = `${scrollbarWidth}px`;
+            document.body.style.overflow = 'hidden';
+
+            modal.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                modal.classList.add('active');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            });
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+            }, 300);
+        }
+    </script>
+</body>
+</html>

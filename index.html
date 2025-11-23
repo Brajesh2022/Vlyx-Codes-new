@@ -665,13 +665,15 @@
                 <p class="text-gray-400 text-sm md:text-base">Real applications serving real users.</p>
             </div>
             
-            <div class="hidden md:flex gap-3">
-                <button id="scrollLeft" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 group glass-panel">
-                    <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
-                </button>
-                <button id="scrollRight" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 group glass-panel">
-                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                </button>
+            <div class="flex items-center gap-3">
+                <div class="hidden md:flex gap-3">
+                    <button id="scrollLeft" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 group glass-panel">
+                        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+                    </button>
+                    <button id="scrollRight" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 group glass-panel">
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -987,16 +989,16 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <div class="flex flex-col md:flex-row h-[85vh] md:h-auto overflow-y-auto md:overflow-hidden">
+            <div class="flex flex-col max-h-[90vh] overflow-y-auto">
                 
                 <!-- Image Side -->
-                <div class="w-full md:w-1/2 h-64 md:h-auto relative shrink-0">
+                <div class="w-full h-64 md:h-96 relative shrink-0">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#0F0F11] via-transparent to-transparent z-10 md:hidden"></div>
                     <img id="modal-img" src="" alt="Project" class="w-full h-full object-cover object-top">
                 </div>
 
                 <!-- Details Side -->
-                <div class="w-full md:w-1/2 p-6 md:p-10 flex flex-col bg-[#0F0F11]">
+                <div class="w-full p-6 md:p-10 flex flex-col bg-[#0F0F11]">
                     
                     <div class="mb-6">
                         <span id="modal-cat" class="text-indigo-400 font-mono text-xs uppercase tracking-wider border border-indigo-500/30 px-2 py-1 rounded bg-indigo-500/10">Category</span>
@@ -1030,6 +1032,8 @@
             </div>
         </div>
     </div>
+
+    <script src="projects.js"></script>
 
     <script>
         // --- GSAP Setup ---
@@ -1242,108 +1246,7 @@
         // --- PROJECT RENDERING LOGIC ---
         // ==========================================================================
         
-        const projects = [
-            {
-                title: "NetVlyx",
-                category: "Streaming",
-                desc: "A fast, ad-free movie streaming web app. Browse and download publicly available content with zero interruptions. Built using advanced scraping techniques to ensure content availability without hosting files directly.",
-                tech: ["Next.js", "Cloudflare Workers", "Firebase", "Web Scraping"],
-                image: "https://i.ibb.co/Qv9Yz6Yg/Netvlyx.jpg",
-                link: "netvlyx.html",
-                color: "text-red-500",
-                hoverBorder: "hover:border-red-500/40"
-            },
-            {
-                title: "Book.vlyx",
-                category: "Education",
-                desc: "The internet's largest free library. We believe education should be accessible to everyone. This platform aggregates millions of free ebooks from various sources into a clean, ad-free interface for students.",
-                tech: ["Next.js", "Cloudflare Workers", "GitHub CMS", "Scraping"],
-                image: "https://i.ibb.co/3DSW6Vy/Book-vlyx.png",
-                link: "book-vlyx.html",
-                color: "text-blue-500",
-                hoverBorder: "hover:border-blue-500/40"
-            },
-            {
-                title: "FireVlyx",
-                category: "Dev Tools",
-                desc: "A browser-based deployment tool that eliminates command-line setups. Deploy your websites directly to Firebase Hosting or Vercel using a drag-and-drop interface or by connecting your GitHub repo.",
-                tech: ["Next.js", "Firebase API", "GitHub API", "Vercel"],
-                image: "https://i.ibb.co/jvd1jWNd/FireVlyx.png",
-                link: "firevlyx.html",
-                color: "text-yellow-500",
-                hoverBorder: "hover:border-yellow-500/40"
-            },
-            {
-                title: "Vlyx.mod",
-                category: "Storefront",
-                desc: "A specialized digital storefront for organizing and displaying Mod APKs. Features a clean UI and automated data gathering to keep app versions up to date.",
-                tech: ["Next.js", "Cloudflare Workers", "Web Scraping", "Vercel"],
-                image: "https://i.ibb.co/R4z8V2zz/vlyx-mod.png",
-                link: "vlyx-mod.html",
-                color: "text-green-400",
-                hoverBorder: "hover:border-green-500/40"
-            },
-            {
-                title: "Vlyx.ide",
-                category: "AI Tools",
-                desc: "A prompt-based code generation tool. Simply describe what you want in natural language, and Vlyx.ide generates downloadable, ready-to-run code packages. No setup required.",
-                tech: ["Remix", "Bolt.new Open Source", "Cloudflare", "AI API"],
-                image: "https://i.ibb.co/ks38pYb5/Vlyx-ide.png",
-                link: "vlyx-ide.html",
-                color: "text-purple-400",
-                hoverBorder: "hover:border-purple-500/40"
-            },
-            {
-                title: "AniVlyx",
-                category: "Entertainment",
-                desc: "An anime streaming platform built under the Vlyx ecosystem. Our mission: No ads on the internet. It scrapes anime content to serve users a premium, interruption-free viewing experience.",
-                tech: ["React (Vite)", "Cloudflare Workers", "Cloudflare Pages"],
-                image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=800&auto=format&fit=crop", 
-                link: "anivlyx.html",
-                color: "text-pink-500",
-                hoverBorder: "hover:border-pink-500/40"
-            },
-            {
-                title: "DPS Keoti",
-                category: "Institutional",
-                desc: "A comprehensive school website with a custom-built admission system. Features an auto-updating video gallery (via YouTube RSS) and generates professional, printable admission receipts for parents.",
-                tech: ["Next.js Static", "YouTube RSS", "Google Forms", "Firebase"],
-                image: "https://i.ibb.co/NdvrPdMF/dps-keoti-new.jpg",
-                link: "dps.html",
-                color: "text-green-500",
-                hoverBorder: "hover:border-green-500/40"
-            },
-            {
-                title: "DPS Dashboard",
-                category: "Management",
-                desc: "A secure internal dashboard for DPS Keoti staff and administration. Handles student data management, fee tracking, and operational logistics securely using Firestore.",
-                tech: ["Next.js", "Firestore", "Auth"],
-                image: "https://i.ibb.co/NdvrPdMF/dps-keoti-new.jpg",
-                link: "dps.html",
-                color: "text-emerald-400",
-                hoverBorder: "hover:border-emerald-500/40"
-            },
-            {
-                title: "Luna AI",
-                category: "Assistant",
-                desc: "The intelligent brain behind Vlyx Codes. Luna is an integrated AI assistant accessible via the floating button on our homepage, ready to guide users through our ecosystem.",
-                tech: ["Next.js", "LLM Integration", "Vercel AI SDK"],
-                image: "https://i.ibb.co/8DdDrpK9/luna-ai.jpg",
-                link: "luna.html",
-                color: "text-indigo-400",
-                hoverBorder: "hover:border-indigo-500/40"
-            },
-            {
-                title: "Ekagra Academy",
-                category: "Client Work",
-                desc: "A highly optimized WordPress website for a coaching institute in Darbhanga. Focused on local SEO ranking and providing a smooth information flow for prospective students.",
-                tech: ["WordPress", "PHP", "SEO"],
-                image: "https://i.postimg.cc/cHwXy6Bw/Ekagra.jpg",
-                link: "ekagra.html",
-                color: "text-orange-400",
-                hoverBorder: "hover:border-orange-500/40"
-            }
-        ];
+        // Projects data is loaded from projects.js
 
         // Render Projects
         const container = document.getElementById('card-container');
