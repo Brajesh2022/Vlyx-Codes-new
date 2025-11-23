@@ -2,7 +2,7 @@
 <html lang="en" class="bg-[#050505] scroll-smooth antialiased selection:bg-indigo-500 selection:text-white overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vlyx Codes | Innovative Web Development & AI Solutions</title>
     <meta name="description" content="Innovative web development & AI solutions. Fast, affordable, and high-quality. Specializing in custom websites, AI integration, Luna AI assistant, SEO optimization, and modern hosting solutions.">
     <link rel="canonical" href="https://vlyx-codes.pages.dev/projects.html">
@@ -24,16 +24,16 @@
     <script src="tailwindcss.js"></script>
 
     <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <!-- Markdown Parser -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- DOMPurify Sanitizer -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script defer src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -130,7 +130,7 @@
 
     <nav class="fixed top-0 left-0 w-full z-50 px-4 pt-4 flex justify-center transform-gpu" id="navbar">
         <div class="liquid-glass-nav pl-4 md:pl-6 pr-2 py-2.5 flex items-center gap-4 md:gap-8 max-w-[95vw] md:max-w-none transition-all duration-300">
-            <a href="index.html" class="font-bold text-lg md:text-xl tracking-tight flex items-center gap-2 text-white">
+            <a href="index.html" aria-label="Home" class="font-bold text-lg md:text-xl tracking-tight flex items-center gap-2 text-white">
                 <i class="fa-solid fa-code text-indigo-400"></i>
                 <span>Vlyx<span class="text-gray-500">Codes</span></span>
             </a>
@@ -145,6 +145,7 @@
         </div>
     </nav>
 
+    <main>
     <header class="pt-32 pb-16 px-6 text-center hero-bg border-b border-white/5">
         <div class="max-w-4xl mx-auto">
             <span class="text-indigo-400 font-mono text-xs md:text-sm uppercase tracking-widest">Complete Portfolio</span>
@@ -158,6 +159,7 @@
             <!-- Projects injected here -->
         </div>
     </section>
+    </main>
 
     <footer class="py-12 border-t border-white/5 text-center text-gray-600 text-sm">
         <p>&copy; 2025 Vlyx Codes. All rights reserved.</p>
@@ -167,7 +169,7 @@
     <div id="project-modal" class="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
         <div id="modal-content" class="relative w-full max-w-4xl bg-[#0F0F11] border border-white/10 rounded-3xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
-            <button onclick="closeModal()" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors border border-white/10">
+            <button onclick="closeModal()" aria-label="Close Modal" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors border border-white/10">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <div class="flex flex-col max-h-[90vh] overflow-y-auto">
@@ -204,6 +206,7 @@
     <script src="projects.js"></script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
         // --- Spotlight Effect ---
         function initSpotlight() {
             document.querySelectorAll('.spotlight-wrapper').forEach(card => {
@@ -229,7 +232,7 @@
                 card.innerHTML = `
                     <div class="h-[55%] w-full overflow-hidden relative">
                         <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                        <img src="${p.image}" alt="${p.title}" class="bg-image w-full h-full object-cover transition-transform duration-700 ease-out">
+                        <img src="${p.image}" alt="${p.title}" width="400" height="264" loading="lazy" class="bg-image w-full h-full object-cover transition-transform duration-700 ease-out">
                         <div class="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-mono uppercase tracking-wider text-white">
                             ${p.category}
                         </div>
@@ -244,7 +247,7 @@
                                 ${p.tech.slice(0, 2).map(t => `<span class="text-[10px] px-2 py-1 rounded border border-white/10 bg-white/5 text-gray-300">${t}</span>`).join('')}
                                 ${p.tech.length > 2 ? `<span class="text-[10px] px-2 py-1 text-gray-500">+${p.tech.length - 2}</span>` : ''}
                             </div>
-                            <button class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                            <button aria-label="View Project" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
                                 <i class="fa-solid fa-arrow-up-right-from-square transform group-hover:rotate-45 transition-transform"></i>
                             </button>
                         </div>
@@ -271,7 +274,7 @@
         const modal = document.getElementById('project-modal');
         const modalContent = document.getElementById('modal-content');
 
-        function openModal(index) {
+        window.openModal = function(index) {
             const p = projects[index];
             document.getElementById('modal-img').src = p.image;
             document.getElementById('modal-title').innerText = p.title;
@@ -295,7 +298,7 @@
             });
         }
 
-        function closeModal() {
+        window.closeModal = function() {
             modal.classList.remove('active');
             modalContent.classList.remove('scale-100');
             modalContent.classList.add('scale-95');
@@ -305,6 +308,7 @@
                 document.body.style.paddingRight = '';
             }, 300);
         }
+        });
     </script>
 </body>
 </html>

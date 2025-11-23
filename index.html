@@ -2,7 +2,7 @@
 <html lang="en" class="bg-[#050505] scroll-smooth antialiased selection:bg-indigo-500 selection:text-white overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vlyx Codes | Innovative Web Development & AI Solutions</title>
     <meta name="description" content="Innovative web development & AI solutions. Fast, affordable, and high-quality. Specializing in custom websites, AI integration, Luna AI assistant, SEO optimization, and modern hosting solutions.">
     <link rel="canonical" href="https://vlyx-codes.pages.dev">
@@ -43,16 +43,16 @@
     <script src="tailwindcss.js"></script>
     
     <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
     <!-- Markdown Parser -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- DOMPurify Sanitizer -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script defer src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -393,7 +393,7 @@
 
     <nav class="fixed top-0 left-0 w-full z-50 px-4 pt-4 flex justify-center transform-gpu" id="navbar">
         <div class="liquid-glass-nav permanent-glow pl-4 md:pl-6 pr-2 py-2.5 flex items-center gap-4 md:gap-8 max-w-[95vw] md:max-w-none transition-all duration-300">
-            <a href="#" class="font-bold text-lg md:text-xl tracking-tight flex items-center gap-2 text-white">
+            <a href="#" class="font-bold text-lg md:text-xl tracking-tight flex items-center gap-2 text-white" aria-label="Home">
                 <i class="fa-solid fa-code text-indigo-400 animate-pulse"></i>
                 <span>Vlyx<span class="text-gray-500">Codes</span></span>
             </a>
@@ -408,6 +408,7 @@
         </div>
     </nav>
 
+    <main>
     <header class="min-h-[100svh] relative flex flex-col items-center justify-center px-4 md:px-6 text-center overflow-hidden hero-bg pt-20">
         
         <div class="hero-grid"></div>
@@ -701,10 +702,10 @@
             
             <div class="flex items-center gap-3">
                 <div class="hidden md:flex gap-3">
-                    <button id="scrollLeft" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 group glass-panel">
+                    <button id="scrollLeft" aria-label="Scroll Left" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 group glass-panel">
                         <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
                     </button>
-                    <button id="scrollRight" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 group glass-panel">
+                    <button id="scrollRight" aria-label="Scroll Right" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 group glass-panel">
                         <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                     </button>
                 </div>
@@ -753,7 +754,7 @@
                 <p class="text-gray-300 text-sm leading-relaxed">"Working with Vlyx Codes on our school website was a great experience. They built us a modern, user-friendly site with a complete student dashboard."</p>
                 <div class="mt-auto flex items-center gap-3">
                     <!-- Real Image with crop -->
-                    <img src="https://i.postimg.cc/G2Fpmw3y/Firefly-20250127001509-2.jpg" alt="Bipin K. Y." class="w-12 h-12 rounded-full object-cover border border-white/10">
+                    <img src="https://i.postimg.cc/G2Fpmw3y/Firefly-20250127001509-2.jpg" alt="Bipin K. Y." width="48" height="48" loading="lazy" class="w-12 h-12 rounded-full object-cover border border-white/10">
                     <div>
                         <div class="text-white font-bold text-sm">Bipin K. Y.</div>
                         <div class="text-gray-500 text-xs">Director, D.P.S Keoti</div>
@@ -767,7 +768,7 @@
                 <p class="text-gray-300 text-sm leading-relaxed">"They gave us an amazing website that does everything we need - and the price was totally reasonable. We can easily update course info ourselves now."</p>
                 <div class="mt-auto flex items-center gap-3">
                     <!-- Real Image with crop -->
-                    <img src="https://i.postimg.cc/d1qx4MZ2/Whats-App-Image-2024-03-29-at-10-25-11-PM.jpg" alt="Sanjay" class="w-12 h-12 rounded-full object-cover border border-white/10">
+                    <img src="https://i.postimg.cc/d1qx4MZ2/Whats-App-Image-2024-03-29-at-10-25-11-PM.jpg" alt="Sanjay" width="48" height="48" loading="lazy" class="w-12 h-12 rounded-full object-cover border border-white/10">
                     <div>
                         <div class="text-white font-bold text-sm">Sanjay</div>
                         <div class="text-gray-500 text-xs">Director, Ekagra Academy</div>
@@ -959,6 +960,7 @@
             </div>
         </div>
     </section>
+    </main>
 
     <!-- FLOATING AI BUTTON -->
     <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
@@ -975,12 +977,12 @@
                 </div>
                 
                 <!-- Minimize Button (Only visible in fullscreen) -->
-                <button id="luna-minimize" onclick="toggleLuna()" class="ml-auto text-gray-400 hover:text-white hidden">
+                <button id="luna-minimize" onclick="toggleLuna()" aria-label="Minimize Chat" class="ml-auto text-gray-400 hover:text-white hidden">
                     <i class="fa-solid fa-compress"></i>
                 </button>
                 
                 <!-- Close Button (Only visible in normal mode) -->
-                <button id="luna-close" onclick="toggleLuna()" class="ml-auto text-gray-400 hover:text-white">
+                <button id="luna-close" onclick="toggleLuna()" aria-label="Close Chat" class="ml-auto text-gray-400 hover:text-white">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -996,7 +998,7 @@
             <div class="p-3 border-t border-white/10 bg-black/40">
                 <form onsubmit="sendLunaMessage(event)" class="flex gap-2">
                     <input type="text" id="luna-input" placeholder="Ask a question..." class="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500 focus:bg-white/10 transition-colors">
-                    <button type="submit" class="w-9 h-9 rounded-full bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-500 transition-colors">
+                    <button type="submit" aria-label="Send Message" class="w-9 h-9 rounded-full bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-500 transition-colors">
                         <i class="fa-solid fa-paper-plane text-xs"></i>
                     </button>
                 </form>
@@ -1004,7 +1006,7 @@
         </div>
 
         <!-- Trigger Button -->
-        <button id="luna-trigger" onclick="toggleLuna()" class="w-14 h-14 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:scale-110 transition-transform pointer-events-auto group relative">
+        <button id="luna-trigger" onclick="toggleLuna()" aria-label="Open Chat" class="w-14 h-14 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:scale-110 transition-transform pointer-events-auto group relative">
             <i class="fa-solid fa-robot text-xl"></i>
             <span class="absolute top-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-black"></span>
         </button>
@@ -1019,7 +1021,7 @@
         <div id="modal-content" class="relative w-full max-w-4xl bg-[#0F0F11] border border-white/10 rounded-3xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
             
             <!-- Close Button -->
-            <button onclick="closeModal()" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors border border-white/10">
+            <button onclick="closeModal()" aria-label="Close Modal" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors border border-white/10">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
@@ -1070,6 +1072,7 @@
     <script src="projects.js"></script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
         // --- GSAP Setup ---
         gsap.registerPlugin(ScrollTrigger);
 
@@ -1100,7 +1103,7 @@
         });
 
         // --- Contact Toggle Logic ---
-        function revealContact() {
+        window.revealContact = function() {
             const btn = document.getElementById('contact-btn');
             const panel = document.getElementById('contact-panel');
             btn.classList.add('hidden');
@@ -1110,7 +1113,7 @@
             }, 10);
         }
 
-        function closeContact() {
+        window.closeContact = function() {
             const btn = document.getElementById('contact-btn');
             const panel = document.getElementById('contact-panel');
             panel.classList.add('opacity-0', 'translate-y-4');
@@ -1164,7 +1167,7 @@
             }
         ];
         
-        function toggleLuna() {
+        window.toggleLuna = function() {
             const chat = document.getElementById('luna-chat');
             
             if (isChatOpen) {
@@ -1204,7 +1207,7 @@
             isFullscreen = true;
         }
 
-        async function sendLunaMessage(e) {
+        window.sendLunaMessage = async function(e) {
             e.preventDefault();
             const input = document.getElementById('luna-input');
             const msg = input.value.trim();
@@ -1297,7 +1300,7 @@
                 card.innerHTML = `
                     <div class="h-[55%] w-full overflow-hidden relative">
                         <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                        <img src="${p.image}" alt="${p.title}" class="bg-image w-full h-full object-cover transition-transform duration-700 ease-out">
+                        <img src="${p.image}" alt="${p.title}" width="400" height="264" loading="lazy" class="bg-image w-full h-full object-cover transition-transform duration-700 ease-out">
                         <div class="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-mono uppercase tracking-wider text-white">
                             ${p.category}
                         </div>
@@ -1312,7 +1315,7 @@
                                 ${p.tech.slice(0, 2).map(t => `<span class="text-[10px] px-2 py-1 rounded border border-white/10 bg-white/5 text-gray-300">${t}</span>`).join('')}
                                 ${p.tech.length > 2 ? `<span class="text-[10px] px-2 py-1 text-gray-500">+${p.tech.length - 2}</span>` : ''}
                             </div>
-                            <button class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                            <button aria-label="View Project" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
                                 <i class="fa-solid fa-arrow-up-right-from-square transform group-hover:rotate-45 transition-transform"></i>
                             </button>
                         </div>
@@ -1366,7 +1369,7 @@
         const modal = document.getElementById('project-modal');
         const modalContent = document.getElementById('modal-content');
 
-        function openModal(index) {
+        window.openModal = function(index) {
             const p = projects[index];
             document.getElementById('modal-img').src = p.image;
             document.getElementById('modal-title').innerText = p.title;
@@ -1391,7 +1394,7 @@
             });
         }
 
-        function closeModal() {
+        window.closeModal = function() {
             modal.classList.remove('active');
             modalContent.classList.remove('scale-100');
             modalContent.classList.add('scale-95');
@@ -1435,7 +1438,7 @@
             `;
         }
 
-        function nextQuestion() {
+        window.nextQuestion = function() {
             renderQuestion();
         }
 
@@ -1460,7 +1463,7 @@
             `;
         }
 
-        function handleAnswer(answer) {
+        window.handleAnswer = function(answer) {
             userSelections.push(answer);
             currentStep++;
             if (currentStep < questions.length) {
@@ -1509,7 +1512,7 @@
             `;
         }
 
-        function resetAI() {
+        window.resetAI = function() {
             currentStep = 0;
             userSelections = [];
             renderStart();
@@ -1517,7 +1520,7 @@
 
         // Init
         renderStart();
-
+        });
     </script>
 </body>
 </html>
