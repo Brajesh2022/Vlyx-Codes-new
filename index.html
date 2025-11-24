@@ -40,7 +40,7 @@
     }
     </script>
 
-    <script src="tailwindcss.js"></script>
+    <link rel="stylesheet" href="style.css">
     
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
@@ -52,58 +52,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                        display: ['Inter Tight', 'sans-serif'],
-                    },
-                    colors: {
-                        'vlyx-black': '#050505',
-                        'vlyx-card': '#0f0f0f',
-                        'vlyx-border': 'rgba(255, 255, 255, 0.08)',
-                        'accent': '#6366f1',
-                    },
-                    animation: {
-                        'shine': 'shine 3s infinite linear',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                        'blob': 'blob 10s infinite',
-                        'liquid': 'liquid 8s ease-in-out infinite',
-                        'spin-slow': 'spin 8s linear infinite',
-                        'typing': 'typing 1.5s infinite ease-in-out',
-                    },
-                    keyframes: {
-                        shine: {
-                            '0%': { left: '-100%' },
-                            '100%': { left: '100%' }
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' }
-                        },
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        },
-                        liquid: {
-                            '0%, 100%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' },
-                            '50%': { borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%' }
-                        },
-                        typing: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-4px)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
 
     <style>
         /* --- Core Aesthetics --- */
@@ -1061,7 +1009,7 @@
         </div>
     </div>
 
-    <script src="projects.js"></script>
+    <script src="projects.js" defer></script>
 
     <script>
         // Load scripts deferred
@@ -1135,15 +1083,17 @@
         }
 
         // --- Spotlight Effect ---
-        document.querySelectorAll('.spotlight, .spotlight-wrapper').forEach(card => {
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
+        function initSpotlight() {
+            document.querySelectorAll('.spotlight, .spotlight-wrapper').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
             });
-        });
+        }
 
         // --- Contact Toggle Logic ---
         function revealContact() {
@@ -1328,74 +1278,82 @@
         
         // Projects data is loaded from projects.js
 
-        // Render Projects
-        const container = document.getElementById('card-container');
-        
-        if (container) {
-            projects.forEach((p, index) => {
-                const card = document.createElement('div');
-                card.className = `project-card snap-center shrink-0 w-[85vw] md:w-[400px] h-[480px] glass-panel rounded-3xl overflow-hidden relative group cursor-pointer spotlight-wrapper border border-white/5 ${p.hoverBorder} transition-colors duration-300`;
-                
-                // Initial state for animation
-                card.style.opacity = '0'; 
-                card.style.transform = 'translateY(30px)';
+        window.addEventListener('DOMContentLoaded', () => {
+            // Init Static Spotlights (testimonials etc)
+            initSpotlight();
 
-                card.innerHTML = `
-                    <div class="h-[55%] w-full overflow-hidden relative">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                        <img src="${p.image}" alt="${p.title}" loading="lazy" class="bg-image w-full h-full object-cover transition-transform duration-700 ease-out">
-                        <div class="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-mono uppercase tracking-wider text-white">
-                            ${p.category}
-                        </div>
-                    </div>
-                    <div class="h-[45%] p-6 flex flex-col justify-between relative z-20 bg-gradient-to-b from-[#0f0f0f] to-black">
-                        <div>
-                            <h3 class="text-2xl font-bold text-white mb-2 group-hover:${p.color} transition-colors">${p.title}</h3>
-                            <p class="text-gray-400 text-sm line-clamp-3 leading-relaxed">${p.desc}</p>
-                        </div>
-                        <div class="flex items-center justify-between mt-4">
-                            <div class="flex gap-2 overflow-hidden">
-                                ${p.tech.slice(0, 2).map(t => `<span class="text-[10px] px-2 py-1 rounded border border-white/10 bg-white/5 text-gray-300">${t}</span>`).join('')}
-                                ${p.tech.length > 2 ? `<span class="text-[10px] px-2 py-1 text-gray-500">+${p.tech.length - 2}</span>` : ''}
+            // Render Projects
+            const container = document.getElementById('card-container');
+
+            if (container && typeof projects !== 'undefined') {
+                projects.forEach((p, index) => {
+                    const card = document.createElement('div');
+                    card.className = `project-card snap-center shrink-0 w-[85vw] md:w-[400px] h-[480px] glass-panel rounded-3xl overflow-hidden relative group cursor-pointer spotlight-wrapper border border-white/5 ${p.hoverBorder} transition-colors duration-300`;
+
+                    // Initial state for animation
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(30px)';
+
+                    card.innerHTML = `
+                        <div class="h-[55%] w-full overflow-hidden relative">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+                            <img src="${p.image}" alt="${p.title}" loading="lazy" class="bg-image w-full h-full object-cover transition-transform duration-700 ease-out">
+                            <div class="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-mono uppercase tracking-wider text-white">
+                                ${p.category}
                             </div>
-                            <button class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                                <i class="fa-solid fa-arrow-up-right-from-square transform group-hover:rotate-45 transition-transform"></i>
-                            </button>
                         </div>
-                    </div>
-                `;
-                
-                card.onclick = () => openModal(index);
-                container.appendChild(card);
-            });
+                        <div class="h-[45%] p-6 flex flex-col justify-between relative z-20 bg-gradient-to-b from-[#0f0f0f] to-black">
+                            <div>
+                                <h3 class="text-2xl font-bold text-white mb-2 group-hover:${p.color} transition-colors">${p.title}</h3>
+                                <p class="text-gray-400 text-sm line-clamp-3 leading-relaxed">${p.desc}</p>
+                            </div>
+                            <div class="flex items-center justify-between mt-4">
+                                <div class="flex gap-2 overflow-hidden">
+                                    ${p.tech.slice(0, 2).map(t => `<span class="text-[10px] px-2 py-1 rounded border border-white/10 bg-white/5 text-gray-300">${t}</span>`).join('')}
+                                    ${p.tech.length > 2 ? `<span class="text-[10px] px-2 py-1 text-gray-500">+${p.tech.length - 2}</span>` : ''}
+                                </div>
+                                <button class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                                    <i class="fa-solid fa-arrow-up-right-from-square transform group-hover:rotate-45 transition-transform"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
 
-            // Animate Cards Entrance - Moved to initGSAP to wait for GSAP load
-            
-            // Scroll Logic
-            document.getElementById('scrollLeft').onclick = () => container.scrollBy({ left: -450, behavior: 'smooth' });
-            document.getElementById('scrollRight').onclick = () => container.scrollBy({ left: 450, behavior: 'smooth' });
+                    card.onclick = () => openModal(index);
+                    container.appendChild(card);
+                });
 
-            // Drag to Scroll
-            let isDown = false;
-            let startX;
-            let scrollLeft;
+                // Init Spotlights on new cards
+                initSpotlight();
 
-            container.addEventListener('mousedown', (e) => {
-                isDown = true;
-                container.classList.add('active:cursor-grabbing');
-                startX = e.pageX - container.offsetLeft;
-                scrollLeft = container.scrollLeft;
-            });
-            container.addEventListener('mouseleave', () => { isDown = false; });
-            container.addEventListener('mouseup', () => { isDown = false; });
-            container.addEventListener('mousemove', (e) => {
-                if(!isDown) return;
-                e.preventDefault();
-                const x = e.pageX - container.offsetLeft;
-                const walk = (x - startX) * 2;
-                container.scrollLeft = scrollLeft - walk;
-            });
-        }
+                // Animate Cards Entrance - Moved to initGSAP to wait for GSAP load
+
+                // Scroll Logic
+                document.getElementById('scrollLeft').onclick = () => container.scrollBy({ left: -450, behavior: 'smooth' });
+                document.getElementById('scrollRight').onclick = () => container.scrollBy({ left: 450, behavior: 'smooth' });
+
+                // Drag to Scroll
+                let isDown = false;
+                let startX;
+                let scrollLeft;
+
+                container.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    container.classList.add('active:cursor-grabbing');
+                    startX = e.pageX - container.offsetLeft;
+                    scrollLeft = container.scrollLeft;
+                });
+                container.addEventListener('mouseleave', () => { isDown = false; });
+                container.addEventListener('mouseup', () => { isDown = false; });
+                container.addEventListener('mousemove', (e) => {
+                    if(!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - container.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    container.scrollLeft = scrollLeft - walk;
+                });
+            }
+        });
 
         // --- Modal Logic ---
         const modal = document.getElementById('project-modal');

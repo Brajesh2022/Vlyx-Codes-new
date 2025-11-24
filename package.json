@@ -1,0 +1,28 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  },
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "projects.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Brajesh2022/Vlyx-Codes-new.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Brajesh2022/Vlyx-Codes-new/issues"
+  },
+  "homepage": "https://github.com/Brajesh2022/Vlyx-Codes-new#readme",
+  "dependencies": {
+    "autoprefixer": "^10.4.22",
+    "postcss": "^8.5.6"
+  }
+}
