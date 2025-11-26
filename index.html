@@ -40,22 +40,23 @@
     }
     </script>
 
-    <script src="tailwindcss.js"></script>
+    <script src="tailwindcss.js" defer></script>
     
     <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
     
     <!-- Markdown Parser -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
     <!-- DOMPurify Sanitizer -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js" defer></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
 
     <script>
@@ -753,7 +754,7 @@
                 <p class="text-gray-300 text-sm leading-relaxed">"Working with Vlyx Codes on our school website was a great experience. They built us a modern, user-friendly site with a complete student dashboard."</p>
                 <div class="mt-auto flex items-center gap-3">
                     <!-- Real Image with crop -->
-                    <img src="https://i.postimg.cc/G2Fpmw3y/Firefly-20250127001509-2.jpg" alt="Bipin K. Y." class="w-12 h-12 rounded-full object-cover border border-white/10">
+                    <img src="https://i.postimg.cc/G2Fpmw3y/Firefly-20250127001509-2.jpg" alt="Bipin K. Y." class="w-12 h-12 rounded-full object-cover border border-white/10" loading="lazy">
                     <div>
                         <div class="text-white font-bold text-sm">Bipin K. Y.</div>
                         <div class="text-gray-500 text-xs">Director, D.P.S Keoti</div>
@@ -767,7 +768,7 @@
                 <p class="text-gray-300 text-sm leading-relaxed">"They gave us an amazing website that does everything we need - and the price was totally reasonable. We can easily update course info ourselves now."</p>
                 <div class="mt-auto flex items-center gap-3">
                     <!-- Real Image with crop -->
-                    <img src="https://i.postimg.cc/d1qx4MZ2/Whats-App-Image-2024-03-29-at-10-25-11-PM.jpg" alt="Sanjay" class="w-12 h-12 rounded-full object-cover border border-white/10">
+                    <img src="https://i.postimg.cc/d1qx4MZ2/Whats-App-Image-2024-03-29-at-10-25-11-PM.jpg" alt="Sanjay" class="w-12 h-12 rounded-full object-cover border border-white/10" loading="lazy">
                     <div>
                         <div class="text-white font-bold text-sm">Sanjay</div>
                         <div class="text-gray-500 text-xs">Director, Ekagra Academy</div>
@@ -1028,7 +1029,7 @@
                 <!-- Image Side -->
                 <div class="w-full h-64 md:h-96 relative shrink-0">
                     <div class="absolute inset-0 bg-gradient-to-t from-[#0F0F11] via-transparent to-transparent z-10 md:hidden"></div>
-                    <img id="modal-img" src="" alt="Project" class="w-full h-full object-cover object-top">
+                    <img id="modal-img" src="" alt="Project" class="w-full h-full object-cover object-top" loading="lazy">
                 </div>
 
                 <!-- Details Side -->
@@ -1067,7 +1068,7 @@
         </div>
     </div>
 
-    <script src="projects.js"></script>
+    <script src="projects.js" defer></script>
 
     <script>
         // --- GSAP Setup ---
@@ -1297,7 +1298,7 @@
                 card.innerHTML = `
                     <div class="h-[55%] w-full overflow-hidden relative">
                         <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
-                        <img src="${p.image}" alt="${p.title}" class="bg-image w-full h-full object-cover transition-transform duration-700 ease-out">
+                        <img src="${p.image}" alt="${p.title}" class="bg-image w-full h-full object-cover transition-transform duration-700 ease-out" loading="lazy">
                         <div class="absolute top-4 left-4 z-20 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[10px] font-mono uppercase tracking-wider text-white">
                             ${p.category}
                         </div>
