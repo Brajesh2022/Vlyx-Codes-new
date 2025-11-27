@@ -337,7 +337,7 @@
 </head>
 <body class="relative bg-[#050505]">
 
-    <div class="noise-overlay"></div>
+    <div class="noise-overlay hidden md:block"></div>
 
     <nav class="fixed top-0 left-0 w-full z-50 px-4 pt-4 flex justify-center transform-gpu" id="navbar">
         <div class="liquid-glass-nav permanent-glow pl-4 md:pl-6 pr-2 py-2.5 flex items-center gap-4 md:gap-8 max-w-[95vw] md:max-w-none transition-all duration-300">
@@ -358,11 +358,11 @@
 
     <header class="min-h-[100svh] relative flex flex-col items-center justify-center px-4 md:px-6 text-center overflow-hidden hero-bg pt-20">
         
-        <div class="hero-grid"></div>
+        <div class="hero-grid hidden md:block"></div>
         
-        <div class="liquid-blob top-[-10%] left-[20%] w-[40vw] h-[40vw] bg-indigo-600 rounded-full mix-blend-screen opacity-30 animate-blob gpu-accelerated"></div>
-        <div class="liquid-blob top-[10%] right-[20%] w-[35vw] h-[35vw] bg-purple-600 rounded-full mix-blend-screen opacity-30 animate-blob gpu-accelerated" style="animation-delay: 2s; animation-duration: 12s;"></div>
-        <div class="liquid-blob bottom-[10%] left-[40%] w-[30vw] h-[30vw] bg-blue-600 rounded-full mix-blend-screen opacity-20 animate-blob gpu-accelerated" style="animation-delay: 4s; animation-duration: 14s;"></div>
+        <div class="liquid-blob top-[-10%] left-[20%] w-[40vw] h-[40vw] bg-indigo-600 rounded-full mix-blend-screen opacity-30 animate-blob gpu-accelerated hidden md:block"></div>
+        <div class="liquid-blob top-[10%] right-[20%] w-[35vw] h-[35vw] bg-purple-600 rounded-full mix-blend-screen opacity-30 animate-blob gpu-accelerated hidden md:block" style="animation-delay: 2s; animation-duration: 12s;"></div>
+        <div class="liquid-blob bottom-[10%] left-[40%] w-[30vw] h-[30vw] bg-blue-600 rounded-full mix-blend-screen opacity-20 animate-blob gpu-accelerated hidden md:block" style="animation-delay: 4s; animation-duration: 14s;"></div>
 
         <div class="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 backdrop-blur-md text-indigo-300 text-xs font-mono mb-6 md:mb-8 animate-fade-up opacity-0" style="animation-delay: 0.1s;">
             <span class="relative flex h-2 w-2">
