@@ -16,6 +16,9 @@ export function checkOrigin(request) {
     return false;
   }
 
+  // In Vercel, the origin might match the deployment URL or the custom domain.
+  // We should ideally check if it ends with the expected domain if multiple subdomains are possible.
+  // But strictly matching `url.origin` (the request URL's origin) ensures it's same-origin.
   return origin === url.origin;
 }
 
