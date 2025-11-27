@@ -1,16 +1,18 @@
-import { checkOrigin, isRateLimited } from '../utils.js';
+import { checkOrigin, isRateLimited } from './_utils.js';
 
-export async function onRequestPost(context) {
+export const config = {
+  runtime: 'edge',
+};
+
+export default async function POST(request) {
   try {
-    const { request, env } = context;
-
     // 1. Security: Origin Check
     if (!checkOrigin(request)) {
       return new Response(JSON.stringify({ error: "Unauthorized Origin" }), { status: 403, headers: { "Content-Type": "application/json" } });
     }
 
     // 2. Security: Rate Limiting
-    const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+    const clientIp = request.headers.get("x-forwarded-for") || "unknown";
     if (isRateLimited(clientIp)) {
       return new Response(JSON.stringify({ error: "you exceeded your limits..., try after a minute...." }), { status: 429, headers: { "Content-Type": "application/json" } });
     }
@@ -62,7 +64,7 @@ export async function onRequestPost(context) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'x-goog-api-key': env.GEMINI_API_KEY
+            'x-goog-api-key': process.env.GEMINI_API_KEY
         },
         body: JSON.stringify({
             systemInstruction: { parts: [{ text: vlyxContext }] },
