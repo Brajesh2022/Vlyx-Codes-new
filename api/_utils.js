@@ -1,4 +1,6 @@
 // Simple in-memory rate limiter (Note: Per-isolate in Serverless)
+// In a serverless environment (Edge Runtime), global variables may persist between invocations
+// if the same instance is reused, but this is not guaranteed.
 const ipRequestCounts = new Map();
 
 export function checkOrigin(request) {
@@ -13,14 +15,21 @@ export function checkOrigin(request) {
   if (!origin) {
     // Some legitimate scenarios might lack Origin (e.g. same-site navigation),
     // but for an API called via fetch() from the page, Origin should be present.
+    // In local development (localhost), Origin is sent.
     return false;
   }
 
+  // In Vercel, the origin might match the deployment URL or the custom domain.
+  // We strictly match `url.origin` (the request URL's origin) to ensure it's same-origin.
   return origin === url.origin;
 }
 
-export function isRateLimited(ip) {
-  if (!ip) return false; // Fallback if no IP found
+export function isRateLimited(ipHeader) {
+  // Vercel sends x-forwarded-for as a comma-separated list of IPs.
+  // The first one is the client IP.
+  const ip = (ipHeader || "unknown").split(',')[0].trim();
+
+  if (!ip || ip === "unknown") return false;
 
   const now = Date.now();
   const windowMs = 60 * 1000; // 1 minute

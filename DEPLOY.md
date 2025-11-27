@@ -1,49 +1,60 @@
-# Deployment Guide
+# Deployment Guide (Vercel)
 
-This project uses Cloudflare Pages with Functions to secure the Gemini API integration.
+This project has been migrated from Cloudflare Pages to Vercel. It uses Vercel Edge Functions for the backend logic (`/api/chat` and `/api/estimate`).
 
 ## 1. Prerequisites
 
-- A [Cloudflare Account](https://dash.cloudflare.com/sign-up).
+- A [Vercel Account](https://vercel.com/signup).
 - A [Gemini API Key](https://aistudio.google.com/app/apikey).
+- (Optional) [Vercel CLI](https://vercel.com/docs/cli) installed (`npm i -g vercel`) for local development or manual deployment.
 
-## 2. Deployment to Cloudflare Pages
+## 2. Deployment to Vercel
 
-You can deploy this project in two ways: via Git integration (recommended) or Direct Upload.
+### Option A: GitHub Integration (Recommended)
+1. Push this code to a GitHub repository.
+2. Log in to your Vercel Dashboard.
+3. Click **Add New...** -> **Project**.
+4. Import your GitHub repository.
+5. **Framework Preset:** Select "Other" (since it's a static site with functions). Vercel usually auto-detects this.
+6. **Root Directory:** Leave as `./`.
+7. **Environment Variables:**
+   - **Important:** You MUST set the `GEMINI_API_KEY` for the AI features to work.
+   - Click **Environment Variables**.
+   - Key: `GEMINI_API_KEY`
+   - Value: Paste your Gemini API Key.
+8. Click **Deploy**.
 
-### Option A: Git Integration (Recommended)
-1. Push this code to a GitHub/GitLab repository.
-2. Log in to the Cloudflare Dashboard.
-3. Go to **Workers & Pages** -> **Create Application** -> **Pages** -> **Connect to Git**.
-4. Select your repository.
-5. **Build Settings:**
-   - **Framework Preset:** None (Static HTML)
-   - **Build Command:** (Leave empty)
-   - **Build Output Directory:** `.` (or leave empty if root)
-   - **Root Directory:** `/` (default)
+### Option B: Vercel CLI
+1. Run `vercel login` in your terminal.
+2. Run `vercel` in the project root.
+3. Follow the prompts.
+4. When asked "Want to modify these settings?", answer **No** (defaults are fine).
+5. **After deployment**, go to the Vercel Dashboard for your project, navigate to **Settings** -> **Environment Variables**, and add `GEMINI_API_KEY`.
+6. You may need to redeploy (`vercel --prod`) for the variable to take effect.
 
-### Option B: Direct Upload
-1. Go to **Workers & Pages** -> **Create Application** -> **Pages** -> **Upload Assets**.
-2. Drag and drop your project folder.
+## 3. Environment Variables
 
-## 3. Setting Environment Variables (CRITICAL)
+The application relies on the following environment variable:
 
-Your functions will fail without the API key. You must set this in the Cloudflare dashboard.
+- `GEMINI_API_KEY`: Required for the Chat (Luna) and Estimate features.
 
-1. After your project is initialized (or after the first failed deployment), go to your Pages project settings.
-2. Navigate to **Settings** -> **Environment Variables**.
-3. Add a new variable:
-   - **Variable name:** `GEMINI_API_KEY`
-   - **Value:** Paste your Gemini API Key here.
-   - **Encrypt:** Yes (Recommended)
-4. **Redeploy** your project for the changes to take effect (Go to **Deployments** -> **Create New Deployment**).
+If this variable is missing, the "brain" error ("I'm having trouble connecting to my brain right now") will appear in the chat.
 
 ## 4. Local Development
 
-To run this locally with Cloudflare features, use Wrangler:
+To run locally with Vercel functions:
 
-```bash
-npx wrangler pages dev . --binding GEMINI_API_KEY="your-api-key"
-```
+1. Install Vercel CLI: `npm i -g vercel`
+2. Run `vercel dev`
+3. If it's your first time, it will ask to link to a Vercel project.
+4. Ensure your local environment has the API key. You can pull it from Vercel:
+   ```bash
+   vercel env pull .env.local
+   ```
+   Or create a `.env` file manually with `GEMINI_API_KEY=your_key_here`.
 
-This will simulate the Cloudflare Functions environment on your local machine.
+## 5. Migration Notes (Cloudflare -> Vercel)
+
+- **Functions Directory:** Moved from `functions/` (Cloudflare) to `api/` (Vercel).
+- **Configuration:** Added `vercel.json` to handle clean URLs and routing.
+- **Runtime:** Functions are configured to run on the Vercel Edge Runtime.
